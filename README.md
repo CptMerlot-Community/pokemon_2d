@@ -18,8 +18,3 @@
     * Base Roll - (level diff - (Atk Level Mob - Def Level Mob)) / Random Ranged Value[1-20] 
 * Roll for damage
     * (base DMG Roll * (mod Atking Base Attk - Defending Base Def)) * (Weak mod_range[30-50] or Effective mod_range[30-40])
-
-* AC 17
-* Roll 1 d20 + 7
-
-* 2d4 (1d4 - 2, 1d4 = 4) + 3 = 9

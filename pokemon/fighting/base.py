@@ -6,5 +6,5 @@ class Fighting(Pokemon):
     _effective = ["Dark", "Ice", "Normal", "Rock", "Steel"]
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
         self._type = "Fighting"
+        super().__init__(**kwargs)
