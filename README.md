@@ -3,8 +3,8 @@
 > The goal of this was original to teach some OOP principals but than we ADHDed ourselves into creating a 2d Python game using PyGame of a Pokemon inspired game.
 
 # hp\attk\def\speed mod algo
-* hp base * (level * mod)
-*  40 * (20 * .22) = 176
+* (base_hp * lvl)
+*  (45 * 20) = 900
 
 # attack rules
 
