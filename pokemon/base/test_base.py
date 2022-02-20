@@ -44,29 +44,29 @@ def test_level_up(pokemon_test_lvl_5: Pokemon):
 
 def test_take_damage(pokemon_test_lvl_5: Pokemon):
     pokemon_test_lvl_5.take_damage(10)
-    assert pokemon_test_lvl_5.alive is False
+    assert pokemon_test_lvl_5.alive is True
     assert pokemon_test_lvl_5._current_hitpoints == 40
     assert pokemon_test_lvl_5._hitpoints == 50
     pokemon_test_lvl_5.take_damage(6)
-    assert pokemon_test_lvl_5.alive is False
+    assert pokemon_test_lvl_5.alive is True
     assert pokemon_test_lvl_5._current_hitpoints == 34
     assert pokemon_test_lvl_5._hitpoints == 50
     pokemon_test_lvl_5.take_damage(40)
-    assert pokemon_test_lvl_5.alive is True
+    assert pokemon_test_lvl_5.alive is False
     assert pokemon_test_lvl_5._current_hitpoints == 0
     assert pokemon_test_lvl_5._hitpoints == 50
 
 
 def test_no_positive_take_damage(pokemon_test_lvl_5: Pokemon):
     pokemon_test_lvl_5.take_damage(10)
-    assert pokemon_test_lvl_5.alive is False
+    assert pokemon_test_lvl_5.alive is True
     pokemon_test_lvl_5.take_damage(-10)
     assert pokemon_test_lvl_5._current_hitpoints == 40
 
 
 def test_healing(pokemon_test_lvl_5: Pokemon):
     pokemon_test_lvl_5.take_damage(10)
-    assert pokemon_test_lvl_5.alive is False
+    assert pokemon_test_lvl_5.alive is True
     pokemon_test_lvl_5.heal(-10)
     assert pokemon_test_lvl_5._current_hitpoints == 40
     pokemon_test_lvl_5.heal(5)

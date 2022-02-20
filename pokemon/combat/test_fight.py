@@ -8,7 +8,7 @@ def player_pokemon() -> Pokemon:
     poke = PokemonSchema(1, "test_pokemon", ["grass", "rock"],
                          Base(10, 20, 30, 30, 30, 20)
                          )
-    return Pokemon(poke, (5, 5))
+    return Pokemon(poke, (6, 6))
 
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def computer_pokemon() -> Pokemon:
     poke = PokemonSchema(1, "test_pokemon", ["grass", "rock"],
                          Base(10, 20, 30, 30, 30, 20)
                          )
-    return Pokemon(poke, (1, 1))
+    return Pokemon(poke, (5, 5))
 
 
 def test_current_pokemon_logic(player_pokemon, computer_pokemon):

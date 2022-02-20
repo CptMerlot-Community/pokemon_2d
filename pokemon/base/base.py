@@ -116,7 +116,7 @@ class Pokemon():
 
     @property
     def alive(self) -> bool:
-        return self._current_hitpoints <= 0
+        return self._current_hitpoints > 0
 
     def _evolve(self) -> None:
         # evolve pokemon here

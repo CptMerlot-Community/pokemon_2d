@@ -22,7 +22,7 @@ class Combat():
         return self._is_defending_pokemon_dead()
 
     def _is_defending_pokemon_dead(self) -> bool:
-        return self._defending_pokemon().alive
+        return not self._defending_pokemon().alive
 
     def _defending_pokemon(self) -> Pokemon:
         if self._current_turn._id == self._player_pokemon._id:
