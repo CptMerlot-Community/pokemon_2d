@@ -8,3 +8,7 @@
     * Come up with a EXP per level threshold (Max level 99)
     * Determine how much XP we gain when defeating a certain level pokemon
 * Load up pokemon based on the data schema
+* Class for defining Attacks and Abilities + Base Modifiers
+    * Defining Abilities and what they do
+        * Poisons
+        * Stuns

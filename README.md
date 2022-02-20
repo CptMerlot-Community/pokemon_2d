@@ -17,4 +17,4 @@
 * Roll for hit
     * Base Roll - (level diff - (Atk Level Mob - Def Level Mob)) / Random Ranged Value[1-20] 
 * Roll for damage
-    * (base DMG Roll * (mod Atking Base Attk - Defending Base Def)) * (Weak mod_range[30-50] or Effective mod_range[30-40])
+    * (base DMG Roll * (Atking Base Attk - Defending Base Def)) * (Weak mod_range[30-50] or Effective mod_range[30-40])

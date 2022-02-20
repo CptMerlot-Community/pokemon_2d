@@ -1,11 +1,20 @@
 from pokemon.pokemons import GeneratePokemon
+from pokemon.combat.fight import Combat
 import random
 import time
 
 random.seed(time.time_ns())
 
 
-f1 = GeneratePokemon(l_range=(1, 5), pokemons=[2])
-print(f1)
+p1 = GeneratePokemon(l_range=(3, 4), pokemons=[1])
+print(p1)
 
-print(f1.get_stats())
+c1 = GeneratePokemon(l_range=(1, 2), pokemons=[1])
+print(c1)
+
+c = Combat(p1, c1)
+while c.is_combat_over() is not True:
+    c.attack()
+
+
+print("")

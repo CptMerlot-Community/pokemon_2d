@@ -28,7 +28,13 @@ def test_get_base_stats(pokemon_test_lvl_5: Pokemon):
 
 
 def test_level_up(pokemon_test_lvl_5: Pokemon):
+    assert pokemon_test_lvl_5._attk_pw == 100
+    assert pokemon_test_lvl_5._defense == 150
+    assert pokemon_test_lvl_5._hitpoints == 50
+    assert pokemon_test_lvl_5._speed == 100
+
     pokemon_test_lvl_5.level_up()
+
     assert pokemon_test_lvl_5._level == 6
     assert pokemon_test_lvl_5._attk_pw == 120
     assert pokemon_test_lvl_5._defense == 180
@@ -37,15 +43,35 @@ def test_level_up(pokemon_test_lvl_5: Pokemon):
 
 
 def test_take_damage(pokemon_test_lvl_5: Pokemon):
-    dead = pokemon_test_lvl_5.take_damage(10)
-    assert dead is False
+    pokemon_test_lvl_5.take_damage(10)
+    assert pokemon_test_lvl_5.alive is False
     assert pokemon_test_lvl_5._current_hitpoints == 40
     assert pokemon_test_lvl_5._hitpoints == 50
-    dead = pokemon_test_lvl_5.take_damage(6)
-    assert dead is False
+    pokemon_test_lvl_5.take_damage(6)
+    assert pokemon_test_lvl_5.alive is False
     assert pokemon_test_lvl_5._current_hitpoints == 34
     assert pokemon_test_lvl_5._hitpoints == 50
-    dead = pokemon_test_lvl_5.take_damage(40)
-    assert dead is True
+    pokemon_test_lvl_5.take_damage(40)
+    assert pokemon_test_lvl_5.alive is True
     assert pokemon_test_lvl_5._current_hitpoints == 0
     assert pokemon_test_lvl_5._hitpoints == 50
+
+
+def test_no_positive_take_damage(pokemon_test_lvl_5: Pokemon):
+    pokemon_test_lvl_5.take_damage(10)
+    assert pokemon_test_lvl_5.alive is False
+    pokemon_test_lvl_5.take_damage(-10)
+    assert pokemon_test_lvl_5._current_hitpoints == 40
+
+
+def test_healing(pokemon_test_lvl_5: Pokemon):
+    pokemon_test_lvl_5.take_damage(10)
+    assert pokemon_test_lvl_5.alive is False
+    pokemon_test_lvl_5.heal(-10)
+    assert pokemon_test_lvl_5._current_hitpoints == 40
+    pokemon_test_lvl_5.heal(5)
+    assert pokemon_test_lvl_5._current_hitpoints == 45
+    pokemon_test_lvl_5.heal(10)
+    assert pokemon_test_lvl_5._current_hitpoints == 50
+    pokemon_test_lvl_5.heal(1)
+    assert pokemon_test_lvl_5._current_hitpoints == 50

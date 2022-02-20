@@ -35,7 +35,7 @@ class Name:
 
 
 class Type:
-    type: List[str]
+    types: List[str]
     weak: List[str]
     strong: List[str]
     resistant: List[str]
@@ -114,10 +114,9 @@ class Pokemon():
                     self._evolve()
         self._roll_stats()
 
+    @property
     def alive(self) -> bool:
-        if self._current_hitpoints <= 0:
-            return True
-        return False
+        return self._current_hitpoints <= 0
 
     def _evolve(self) -> None:
         # evolve pokemon here
@@ -129,9 +128,18 @@ class Pokemon():
         # self._experience + get_exp()
         pass
 
-    def take_damage(self, dmg: int) -> bool:
-        self._mins_hp(dmg)
-        return self.alive()
+    def take_damage(self, dmg: int) -> None:
+        if dmg > 0:
+            self._mins_hp(dmg)
+
+    def heal(self, healing: int) -> None:
+        if healing > 0:
+            self._add_hp(healing)
+
+    def _add_hp(self, healing: int) -> None:
+        if (self._hitpoints - self._current_hitpoints) < healing:
+            healing = self._hitpoints - self._current_hitpoints
+        self._current_hitpoints = self._current_hitpoints + healing
 
     def _mins_hp(self, dmg: int) -> None:
         if self._current_hitpoints < dmg:
@@ -140,6 +148,21 @@ class Pokemon():
 
         self._current_hitpoints = self._current_hitpoints - dmg
         return
+
+    @property
+    def attack_power(self):
+        return self._attk_pw
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @property
+    def defense(self):
+        return self._defense
+
+    def get_type(self) -> List[str]:
+        return self._info.type.types
 
     def get_stats(self) -> Dict[str, int]:
         return {
