@@ -1,5 +1,5 @@
 from pokemon.base.base import Pokemon
-
+import operator
 
 class Combat():
     def __init__(self, player_pokemon: Pokemon, computer_pokemon: Pokemon):
@@ -40,13 +40,10 @@ class Combat():
         return False
 
     def _roll_attack(self, attack_pokemon: Pokemon, defending_pokemon: Pokemon) -> int:
-        dmg = int((attack_pokemon.attack_power - defending_pokemon.defense) * 0.25)
-        # 5000 - 3500
-        # 1500
-        # % 1.50
-        # 3500 - 5000
-        # .050
-
+        mod = operator.truediv(attack_pokemon.attack_power, defending_pokemon.defense)
+        if mod > 1:
+            mod = 1
+        dmg = int(attack_pokemon.attack_power * mod)
         # TODO: Add logic if the overkill isn't by a certain amount the pokemon lives
         # with 1hp until next round. We can flag this as a pokemon 1shot protection or something
         return dmg

@@ -10,7 +10,7 @@ def pokemon_test_lvl_5():
     return Pokemon(poke, (5, 5))
 
 
-def test_base_stat_rolls(pokemon_test_lvl_5: Pokemon):
+def test_base_stat_generates(pokemon_test_lvl_5: Pokemon):
     assert pokemon_test_lvl_5._attk_pw == 100
     assert pokemon_test_lvl_5._defense == 150
     assert pokemon_test_lvl_5._hitpoints == 50
