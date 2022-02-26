@@ -12,3 +12,9 @@
     * Defining Abilities and what they do
         * Poisons
         * Stuns
+
+## CI\CD improvements
+
+* Improve Caching
+* Split up steps
+
