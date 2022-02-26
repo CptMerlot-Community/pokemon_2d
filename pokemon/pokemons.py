@@ -13,7 +13,7 @@ POKEMON_TYPE_DATA: List[Dict[str, Any]] = []
 
 # TODO: Change Pokemon Data to a Dict of PokemonSchema where key is the Pokemon ID
 # TODO: Attach Pokemon Type information at the load time of the creation of POKEMON_DATA
-def _load_pokemon_data() -> List[Dict[str, Any]]:
+def _load_pokemon_data():
     global POKEMON_DATA
     global POKEMON_TYPE_DATA
     f = open(POKEMON_DATA_LOCATION, "r", encoding="utf8")
