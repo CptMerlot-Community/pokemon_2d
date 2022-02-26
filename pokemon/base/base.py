@@ -1,6 +1,7 @@
 from typing import Optional, Tuple, Dict, List
 import uuid
 import random
+import operator
 from pokemon.attack.base import Attack
 
 
@@ -84,21 +85,21 @@ class Pokemon():
         self._info = pokemon
         self._id = uuid.uuid1()
         self._roll_for_level(level_range)
-        self._roll_stats()
+        self._generate_stats()
 
     def _roll_for_level(self, level_range: Tuple[int, int]) -> None:
         min, max = level_range
         self._level = random.randint(min, max)
 
-    def _roll_stats(self) -> None:
-        self._hitpoints = self._roll_stat(self._info.base.hp)
-        self._attk_pw = self._roll_stat(self._info.base.attack)
-        self._speed = self._roll_stat(self._info.base.speed)
-        self._defense = self._roll_stat(self._info.base.defense)
+    def _generate_stats(self) -> None:
+        self._hitpoints = self._generate_stat(self._info.base.hp, 0.30)
+        self._attk_pw = self._generate_stat(self._info.base.attack)
+        self._speed = self._generate_stat(self._info.base.speed)
+        self._defense = self._generate_stat(self._info.base.defense)
         self._current_hitpoints = int(self._hitpoints)
 
-    def _roll_stat(self, base: float) -> int:
-        return int(base * self._level)
+    def _generate_stat(self, base: float, stat_mod: float = 0.10) -> int:
+        return int(base * (stat_mod * self._level))
 
     def evolves_to(self) -> str:
         if self._evolves_to is not None:
@@ -112,7 +113,7 @@ class Pokemon():
                 answer = input(f"would you like to evolve {self._info.name} to {self.evolves_to}")
                 if answer.lower() == "yes":
                     self._evolve()
-        self._roll_stats()
+        self._generate_stats()
 
     @property
     def alive(self) -> bool:
