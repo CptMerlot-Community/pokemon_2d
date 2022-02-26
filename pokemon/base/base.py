@@ -5,7 +5,6 @@ import operator
 from pokemon.attack.base import Attack
 
 
-
 class Base:
     hp: int
     attack: int

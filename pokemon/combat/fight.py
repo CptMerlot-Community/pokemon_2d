@@ -1,6 +1,7 @@
 from pokemon.base.base import Pokemon
 import operator
 
+
 class Combat():
     def __init__(self, player_pokemon: Pokemon, computer_pokemon: Pokemon):
         """Starts combat between two given pokemon
