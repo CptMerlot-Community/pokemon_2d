@@ -27,7 +27,7 @@ class Name:
     chinese: str
     french: str
 
-    def __init__(self, english: str, japanese: str, chinese: str, french: str) -> None:
+    def __init__(self, english: str = "", japanese: str = "", chinese: str = "", french: str = "") -> None:
         self.english = english
         self.japanese = japanese
         self.chinese = chinese

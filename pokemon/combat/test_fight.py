@@ -1,11 +1,14 @@
 import pytest
-from pokemon.base.base import Pokemon, PokemonSchema, Base
+from pokemon.base.base import Pokemon, PokemonSchema, Base, Name
 from .fight import Combat
+from pokemon.pokemons import _load_pokemon_types
 
 
 @pytest.fixture
 def player_pokemon() -> Pokemon:
-    poke = PokemonSchema(1, "test_pokemon", ["grass", "rock"],
+
+    pt = _load_pokemon_types(["grass", "rock"])
+    poke = PokemonSchema(1, Name("test_pokemon"), pt,
                          Base(10, 20, 30, 30, 30, 20)
                          )
     return Pokemon(poke, (6, 6))
@@ -13,7 +16,8 @@ def player_pokemon() -> Pokemon:
 
 @pytest.fixture
 def computer_pokemon() -> Pokemon:
-    poke = PokemonSchema(1, "test_pokemon", ["grass", "rock"],
+    pt = _load_pokemon_types(["grass", "rock"])
+    poke = PokemonSchema(1, Name("test_pokemon"), pt,
                          Base(10, 20, 30, 30, 30, 20)
                          )
     return Pokemon(poke, (5, 5))

@@ -9,7 +9,7 @@
         "Weak": "Ghost",
         "Resistant": "Fighting"
     },
-    "Type": {
+    "Fighting": {
         "Type": "Fighting",
         "Strong": [
             "Normal",

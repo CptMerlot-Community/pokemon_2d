@@ -8,7 +8,7 @@ POKEMON_DATA_LOCATION = "C:\\Users\\cptme\\Documents\\Code\\OOP\\pokemon_2d\\dat
 POKEMON_TYPE_DATA_LOCATION = "C:\\Users\\cptme\\Documents\\Code\\OOP\\pokemon_2d\\data\\pokemon_type.json"
 
 POKEMON_DATA: List[Dict[str, Any]] = []
-POKEMON_TYPE_DATA: List[Dict[str, Any]] = []
+POKEMON_TYPE_DATA: Dict[str, Dict[str, Any]] = {}
 
 
 # TODO: Change Pokemon Data to a Dict of PokemonSchema where key is the Pokemon ID
@@ -57,9 +57,9 @@ def _load_pokemon_types(pokemon_types: List[str]) -> Type:
     strong = []
     resistant = []
     vulnerable = []
-    for type in pokemon_types:
-        if type in POKEMON_TYPE_DATA:
-            info = POKEMON_TYPE_DATA[type]
+    for pt in pokemon_types:
+        if pt in POKEMON_TYPE_DATA:
+            info = POKEMON_TYPE_DATA[pt]
             if "Weak" in info:
                 info = info["Weak"]
                 for i in info:
