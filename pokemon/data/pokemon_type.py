@@ -1,4 +1,6 @@
-{
+from typing import List, Dict, Any
+
+POKEMON_TYPE_DATA: Dict[str, Dict[str, Any]] = {
     "Normal": {
         "Type": "Normal",
         "Strong": [

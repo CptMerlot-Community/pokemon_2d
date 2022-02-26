@@ -1,4 +1,6 @@
-[
+from typing import List, Dict, Any
+
+POKEMON_DATA: List[Dict[str, Any]] = [
     {
         "id": 1,
         "name": {

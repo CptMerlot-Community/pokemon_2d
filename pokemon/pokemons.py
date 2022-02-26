@@ -3,27 +3,7 @@ import random
 import json
 
 from pokemon.base.base import Pokemon, PokemonSchema, Base, Type
-
-POKEMON_DATA_LOCATION = "C:\\Users\\cptme\\Documents\\Code\\OOP\\pokemon_2d\\data\\pokemon.json"
-POKEMON_TYPE_DATA_LOCATION = "C:\\Users\\cptme\\Documents\\Code\\OOP\\pokemon_2d\\data\\pokemon_type.json"
-
-POKEMON_DATA: List[Dict[str, Any]] = []
-POKEMON_TYPE_DATA: Dict[str, Dict[str, Any]] = {}
-
-
-# TODO: Change Pokemon Data to a Dict of PokemonSchema where key is the Pokemon ID
-# TODO: Attach Pokemon Type information at the load time of the creation of POKEMON_DATA
-def _load_pokemon_data():
-    global POKEMON_DATA
-    global POKEMON_TYPE_DATA
-    f = open(POKEMON_DATA_LOCATION, "r", encoding="utf8")
-    POKEMON_DATA = json.loads(f.read())
-
-    f = open(POKEMON_TYPE_DATA_LOCATION, "r", encoding="utf8")
-    POKEMON_TYPE_DATA = json.loads(f.read())
-
-
-_load_pokemon_data()
+from pokemon.data import POKEMON_DATA, POKEMON_TYPE_DATA
 
 
 # TODO: Prevent rolling for pokemon below the required level thresholds or way lower than required level
