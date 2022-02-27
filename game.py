@@ -111,9 +111,9 @@ def attack_screen(scn: Surface):
     c_scrn_rect = pg.draw.rect(scn,
                                (255, 255, 255),
                                (0,
-                                scn.get_height()-(scn.get_height()*combat_window_height),
+                                int(scn.get_height()-(scn.get_height()*combat_window_height)),
                                 scn.get_width(),
-                                scn.get_height()*combat_window_height
+                                int(scn.get_height()*combat_window_height)
                                 )
                                )
     c_txt = welcome_font.render(combat_text, False, (0, 0, 0))
