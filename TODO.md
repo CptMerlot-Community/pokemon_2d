@@ -2,6 +2,8 @@
 
 > Always look for inline TODOs if your looking for more work
 
+## Backend Combat Related
+
 * Exp System
     * Gain XP After Combat
     * Check if XP is passed Level Threshold to trigger a new level
@@ -12,6 +14,14 @@
     * Defining Abilities and what they do
         * Poisons
         * Stuns
+
+## Game UI Related
+
+* Add good visual pixel art
+* Create Attk Box (AKA Attack\Run\Item etc...)
+* Background image (even something plan)
+* Understand whats going with PNG\MNG??
+    * IDK the difference
 
 ## CI\CD improvements
 
