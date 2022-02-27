@@ -1,3 +1,4 @@
+from typing import Optional
 from pokemon.base.base import Pokemon
 import random
 import operator
@@ -38,6 +39,13 @@ class Combat():
 
     def _is_defending_pokemon_dead(self) -> bool:
         return not self.defending_pokemon.alive
+
+    def winning_pokemon(self) -> Optional[Pokemon]:
+        if not self.defending_pokemon.alive:
+            return self.attack_pokemon
+        if not self.attack_pokemon.alive:
+            return self.defending_pokemon
+        return None
 
     def attack(self) -> int:
         dmg = self._roll_attack()

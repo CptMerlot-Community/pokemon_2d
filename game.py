@@ -44,22 +44,30 @@ def attack_screen(scn: Surface):
     global c
     global running
     global combat_text
+    winning_pokemon = c.winning_pokemon()
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
-        if event.type == pg.KEYDOWN:
-            if event.key in (pg.K_RETURN, pg.K_SPACE):
-                attk_pokemon = c.attack_pokemon.name
-                def_pokemon = c.defending_pokemon.name
-                dmg = c.attack()
-                combat_text = f"{attk_pokemon} hits {def_pokemon} for {dmg}"
-            if event.key == pg.K_ESCAPE:
-                c = start_new_combat()
-                combat_text = ""
+        if winning_pokemon is not None:
+            combat_text = f"{winning_pokemon.name} has won"
+            if event.type == pg.KEYDOWN:
+                if event.key in (pg.K_RETURN, pg.K_SPACE, pg.K_ESCAPE):
+                    c = start_new_combat()
+                    combat_text = ""
+        else:
+            if event.type == pg.KEYDOWN:
+                if event.key in (pg.K_RETURN, pg.K_SPACE):
+                    attk_pokemon = c.attack_pokemon.name
+                    def_pokemon = c.defending_pokemon.name
+                    dmg = c.attack()
+                    combat_text = f"{attk_pokemon} hits {def_pokemon} for {dmg}"
+                if event.key == pg.K_ESCAPE:
+                    c = start_new_combat()
+                    combat_text = ""
 
     scn.fill((0, 0, 0))
     # player pokemon
-    rect = pg.draw.rect(scn, (255, 0, 0), (60, 225, 200, 75))
+    pg.draw.rect(scn, (255, 0, 0), (60, 225, 200, 75))
 
     # player detail scn
     p_detail = pg.rect.Rect((530, 200, 225, 100))
