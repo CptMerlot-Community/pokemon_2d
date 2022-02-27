@@ -69,7 +69,6 @@ class PokemonSchema:
 
 
 class Pokemon():
-    _type: Optional[str] = None
     _evolves_to: Optional[str] = None
     _evolve_level: Optional[int] = None
     _level = 0
@@ -151,12 +150,52 @@ class Pokemon():
         return
 
     @property
+    def hitpoints(self):
+        return self._hitpoints
+
+    @property
+    def current_hitpoints(self):
+        return self._current_hitpoints
+
+    @property
+    def experience(self):
+        return self._experience
+
+    @property
     def attack_power(self):
         return self._attk_pw
 
     @property
     def speed(self):
         return self._speed
+
+    @property
+    def level(self):
+        return self._level
+
+    @property
+    def name(self):
+        return self._info.name
+
+    @property
+    def type(self):
+        return self._info.type.type
+
+    @property
+    def weak(self):
+        return self._info.type.weak
+
+    @property
+    def strong(self):
+        return self._info.type.strong
+
+    @property
+    def vulnerable(self):
+        return self._info.type.vulnerable
+
+    @property
+    def resistant(self):
+        return self._info.type.resistant
 
     @property
     def defense(self):
@@ -176,4 +215,7 @@ class Pokemon():
         }
 
     def __str__(self) -> str:
-        return("name: {1} type: {2} level: {3} id: {0}".format(self._id, self._info.name, self._type, self._level))
+        return("name: {1} type: {2} level: {3} id: {0}".format(self._id,
+                                                               self._info.name,
+                                                               ", ".join(self._info.type.type),
+                                                               self.level))
