@@ -1,4 +1,6 @@
+from typing import Optional
 from pokemon.base.base import Pokemon
+import random
 import operator
 
 
@@ -14,7 +16,20 @@ class Combat():
         self._computer_pokemon = computer_pokemon
         self._current_turn: Pokemon = self._first_action()
 
+    @property
+    def attack_pokemon(self):
+        return self._current_turn
+
+    @property
+    def defending_pokemon(self):
+        if self._current_turn._id == self._player_pokemon._id:
+            return self._computer_pokemon
+        return self._player_pokemon
+
     def _first_action(self) -> Pokemon:
+        if self._player_pokemon.speed == self._computer_pokemon.speed:
+            if random.randint(0, 1) == 0:
+                return self._player_pokemon
         if self._player_pokemon.speed > self._computer_pokemon.speed:
             return self._player_pokemon
         return self._computer_pokemon
@@ -23,28 +38,26 @@ class Combat():
         return self._is_defending_pokemon_dead()
 
     def _is_defending_pokemon_dead(self) -> bool:
-        return not self._defending_pokemon().alive
+        return not self.defending_pokemon.alive
 
-    def _defending_pokemon(self) -> Pokemon:
-        if self._current_turn._id == self._player_pokemon._id:
-            return self._computer_pokemon
-        return self._player_pokemon
+    def winning_pokemon(self) -> Optional[Pokemon]:
+        if not self.defending_pokemon.alive:
+            return self.attack_pokemon
+        if not self.attack_pokemon.alive:
+            return self.defending_pokemon
+        return None
 
-    def attack(self) -> bool:
-        defending_pokemon = self._defending_pokemon()
-        dmg = self._roll_attack(self._current_turn, defending_pokemon)
-        defending_pokemon.take_damage(dmg)
-        if self._is_defending_pokemon_dead():
-            return True
+    def attack(self) -> int:
+        dmg = self._roll_attack()
+        self.defending_pokemon.take_damage(dmg)
+        self._current_turn = self.defending_pokemon
+        return dmg
 
-        self._current_turn = defending_pokemon
-        return False
-
-    def _roll_attack(self, attack_pokemon: Pokemon, defending_pokemon: Pokemon) -> int:
-        mod = operator.truediv(attack_pokemon.attack_power, defending_pokemon.defense)
+    def _roll_attack(self) -> int:
+        mod = operator.truediv(self.attack_pokemon.attack_power, self.defending_pokemon.defense)
         if mod > 1:
             mod = 1
-        dmg = int(attack_pokemon.attack_power * mod)
+        dmg = int(self.attack_pokemon.attack_power * mod)
         # TODO: Add logic if the overkill isn't by a certain amount the pokemon lives
         # with 1hp until next round. We can flag this as a pokemon 1shot protection or something
         return dmg
