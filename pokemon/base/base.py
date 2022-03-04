@@ -75,7 +75,9 @@ class Pokemon():
     _hitpoints: int = 0
     _current_hitpoints: int = 0
     _attk_pw: int = 0
+    _sp_attk_pw: int = 0
     _defense: int = 0
+    _sp_defense: int = 0
     _speed: int = 0
     _experience: int = 0
     _attacks: List[Attack] = []
@@ -93,8 +95,10 @@ class Pokemon():
     def _generate_stats(self) -> None:
         self._hitpoints = self._generate_stat(self._info.base.hp, 0.30)
         self._attk_pw = self._generate_stat(self._info.base.attack)
+        self._sp_attk_pw = self._generate_stat(self._info.base.sp_attack)
         self._speed = self._generate_stat(self._info.base.speed)
         self._defense = self._generate_stat(self._info.base.defense)
+        self._sp_defense = self._generate_stat(self._info.base.sp_defense)
         self._current_hitpoints = int(self._hitpoints)
 
     def _generate_stat(self, base: float, stat_mod: float = 0.10) -> int:
@@ -166,6 +170,18 @@ class Pokemon():
         return self._attk_pw
 
     @property
+    def special_attack_power(self):
+        return self._sp_attk_pw
+
+    @property
+    def defense(self):
+        return self._defense
+
+    @property
+    def special_defense(self):
+        return self._sp_defense
+
+    @property
     def speed(self):
         return self._speed
 
@@ -196,10 +212,6 @@ class Pokemon():
     @property
     def resistant(self):
         return self._info.type.resistant
-
-    @property
-    def defense(self):
-        return self._defense
 
     def get_type(self) -> List[str]:
         return self._info.type.types

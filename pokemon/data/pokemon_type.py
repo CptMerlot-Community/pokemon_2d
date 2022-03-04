@@ -8,8 +8,8 @@ POKEMON_TYPE_DATA: Dict[str, Dict[str, Any]] = {
             "Ghost",
             "Steel"
         ],
-        "Weak": "Ghost",
-        "Resistant": "Fighting"
+        "Weak": ["Ghost"],
+        "Resistant": ["Fighting"]
     },
     "Fighting": {
         "Type": "Fighting",
