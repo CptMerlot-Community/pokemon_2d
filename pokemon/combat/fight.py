@@ -57,7 +57,28 @@ class Combat():
         mod = operator.truediv(self.attack_pokemon.attack_power, self.defending_pokemon.defense)
         if mod > 1:
             mod = 1
-        dmg = int(self.attack_pokemon.attack_power * mod)
+        dmg = int((self.attack_pokemon.attack_power * mod) * self._dmg_type_mod())
         # TODO: Add logic if the overkill isn't by a certain amount the pokemon lives
         # with 1hp until next round. We can flag this as a pokemon 1shot protection or something
         return dmg
+
+    def _roll_special_attack(self) -> int:
+        mod = operator.truediv(self.attack_pokemon.special_attack_power, self.defending_pokemon.special_defense)
+        if mod > 1:
+            mod = 1
+        dmg = int((self.attack_pokemon.attack_power * mod) * self._dmg_type_mod())
+        # TODO: Add logic if the overkill isn't by a certain amount the pokemon lives
+        # with 1hp until next round. We can flag this as a pokemon 1shot protection or something
+        return dmg
+
+    def _dmg_type_mod(self) -> float:
+        if any(t in self.attack_pokemon.type for t in self.defending_pokemon.vulnerable):
+            return 1.45
+        elif any(t in self.attack_pokemon.type for t in self.defending_pokemon.weak):
+            return 1.20
+        elif any(t in self.attack_pokemon.type for t in self.defending_pokemon.strong):
+            return 0.80
+        elif any(t in self.attack_pokemon.type for t in self.defending_pokemon.resistant):
+            return 0.50
+        else:
+            return 1.0

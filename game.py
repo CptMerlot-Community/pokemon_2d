@@ -30,9 +30,9 @@ combat_text = ""
 
 
 def start_new_combat() -> Combat:
-    p1 = GeneratePokemon(l_range=(4, 4), pokemons=[1, 19, 43])
+    p1 = GeneratePokemon(l_range=(4, 4), pokemons=[1, 4, 19, 43])
     print(p1)
-    c1 = GeneratePokemon(l_range=(4, 4), pokemons=[1, 19, 43])
+    c1 = GeneratePokemon(l_range=(4, 4), pokemons=[1, 4, 19, 43])
     print(c1)
     return Combat(p1, c1)
 

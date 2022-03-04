@@ -41,23 +41,23 @@ def _load_pokemon_types(pokemon_types: List[str]) -> Type:
         if pt in POKEMON_TYPE_DATA:
             info = POKEMON_TYPE_DATA[pt]
             if "Weak" in info:
-                info = info["Weak"]
-                for i in info:
+                info_weak = info["Weak"]
+                for i in info_weak:
                     if i not in weak:
                         weak.append(i)
             if "Strong" in info:
-                info = info["Strong"]
-                for i in info:
-                    if i not in weak:
+                info_strong = info["Strong"]
+                for i in info_strong:
+                    if i not in strong:
                         strong.append(i)
             if "Resistant" in info:
-                info = info["Resistant"]
-                for i in info:
-                    if i not in weak:
+                info_resistant = info["Resistant"]
+                for i in info_resistant:
+                    if i not in resistant:
                         resistant.append(i)
             if "Vulnerable" in info:
-                info = info["Vulnerable"]
-                for i in info:
-                    if i not in weak:
+                info_vulnerable = info["Vulnerable"]
+                for i in info_vulnerable:
+                    if i not in vulnerable:
                         vulnerable.append(i)
     return Type(pokemon_types, weak, strong, resistant, vulnerable)
