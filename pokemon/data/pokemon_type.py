@@ -1,5 +1,6 @@
 from typing import List, Dict, Any
 
+# FIXME: CPT-123 Enforce Better types
 POKEMON_TYPE_DATA: Dict[str, Dict[str, Any]] = {
     "Normal": {
         "Type": "Normal",
