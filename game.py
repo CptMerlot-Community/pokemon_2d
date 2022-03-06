@@ -86,7 +86,6 @@ def attack_screen(scn: Surface):
 
     scn.fill(off_white)
 
-
     # combat screen
     c_scrn_rect = pg.draw.rect(scn,
                                (off_white),
@@ -98,7 +97,8 @@ def attack_screen(scn: Surface):
                                )
 
     # player pokemon
-    p_pokemon_rect = pg.rect.Rect((c_scrn_rect.left + int(scn.get_width()/10), scn.get_height()/2.1, scn.get_width()/3, scn.get_height()/2.5))
+    p_pokemon_rect = pg.rect.Rect((c_scrn_rect.left + int(scn.get_width()/10),
+                                  scn.get_height()/2.1, scn.get_width()/3, scn.get_height()/2.5))
     p_poke = pg.transform.scale(p_pokemon, (p_pokemon_rect.width, p_pokemon_rect.height))
     scn.blit(p_poke, p_pokemon_rect.topleft)
 
@@ -106,13 +106,14 @@ def attack_screen(scn: Surface):
     p_detail = pg.rect.Rect((c_scrn_rect.right / 2, scn.get_height()/2, scn.get_width()/2, scn.get_height()/3.5))
 
     # enemy pokemon
-    e_pokemon_rect = pg.rect.Rect((c_scrn_rect.right - int(scn.get_width()/2.7), scn.get_height()/20, scn.get_width()/3, scn.get_height()/2.5))
+    e_pokemon_rect = pg.rect.Rect((c_scrn_rect.right - int(scn.get_width()/2.7),
+                                   scn.get_height()/20, scn.get_width()/3, scn.get_height()/2.5))
     e_poke = pg.transform.scale(e_pokemon,  (e_pokemon_rect.width, e_pokemon_rect.height))
     scn.blit(e_poke, e_pokemon_rect.topleft)
 
     # enemy detail scn
-    e_detail = pg.rect.Rect((c_scrn_rect.left + (scn.get_width()/50), scn.get_height()/20, scn.get_width()/2.5, scn.get_height()/5.5))
-    # pg.draw.rect(scn, (255, 255, 255), (30, 20, 200, 75))
+    e_detail = pg.rect.Rect((c_scrn_rect.left + (scn.get_width()/50),
+                             scn.get_height()/20, scn.get_width()/2.5, scn.get_height()/5.5))
 
     # TODO: This trash.com this needs to be done a better way
     p_name = pokemon_stat_font.render(f"{c._player_pokemon.name}", False, (111, 196, 169))
@@ -122,7 +123,6 @@ def attack_screen(scn: Surface):
     p_hp = pokemon_stat_font.render(f"HP: {c._player_pokemon.current_hitpoints} / {c._player_pokemon.hitpoints}",
                                     False, (111, 196, 169))
     p_hp_rect = p_hp.get_rect(centerx=p_detail.centerx, bottom=p_detail.bottom - (p_detail.height * .21))
-
 
     e_name = pokemon_stat_font.render(f"{c._computer_pokemon.name}", False, (111, 196, 169))
     e_name_rect = e_name.get_rect(center=(e_detail.centerx, e_detail.top + (e_detail.height * .10)))
@@ -141,14 +141,18 @@ def attack_screen(scn: Surface):
     scn.blit(e_level, e_level_rect)
     e_line = pg.transform.scale(eLine, (e_detail.width, e_detail.height))
     p_line = pg.transform.scale(pLine, (p_detail.width * .80, p_detail.height * .80))
-    #TODO:  See if there is a way to put line inside a rect and have it join on the bottom right of the detail rect
+    # TODO:  See if there is a way to put line inside a rect and have it join on the bottom right of the detail rect
     scn.blit(p_line, (p_detail.left + int(p_detail.left * .15), p_detail.top + int(p_detail.top * .15)))
     scn.blit(e_line, e_detail.topleft)
 
-
-    box_1 = pg.transform.scale(box1, (c_scrn_rect.width + int(c_scrn_rect.width / 100), c_scrn_rect.height + int(c_scrn_rect.height / 100)))
+    box_1 = pg.transform.scale(box1,
+                               (c_scrn_rect.width + int(c_scrn_rect.width / 100),
+                                c_scrn_rect.height + int(c_scrn_rect.height / 100)
+                                )
+                               )
     c_txt = combat_text_format.render(combat_text, False, (0, 0, 0))
-    c_txt_rect = c_txt.get_rect(left=c_scrn_rect.left + int(c_scrn_rect.width / 20), top=c_scrn_rect.top + int(c_scrn_rect.height / 5))
+    c_txt_rect = c_txt.get_rect(left=c_scrn_rect.left + int(c_scrn_rect.width / 20),
+                                top=c_scrn_rect.top + int(c_scrn_rect.height / 5))
     scn.blit(box_1, c_scrn_rect)
     scn.blit(c_txt, c_txt_rect)
 
@@ -168,6 +172,7 @@ def welcome_render(scn: Surface):
     wf_rect = wf.get_rect(center=(scn.get_width() / 2, scn.get_height() / 2))
     scn.blit(wf, wf_rect)
 
+
 def game_loop():
     while running:
         if current_combat:
@@ -180,7 +185,9 @@ def game_loop():
 
     pg.quit()
 
+
 def main():
     game_loop()
+
 
 main()
