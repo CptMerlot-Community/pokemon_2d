@@ -1,6 +1,5 @@
 from typing import Tuple, List, Dict, Any
 import random
-import json
 
 from pokemon.base.base import Pokemon, PokemonSchema, Base, Type
 from pokemon.data import POKEMON_DATA, POKEMON_TYPE_DATA
@@ -33,13 +32,16 @@ def _load_pokemon_from_data(pokemon_id: int) -> PokemonSchema:
 
 
 def _load_pokemon_types(pokemon_types: List[str]) -> Type:
-    weak = []
-    strong = []
-    resistant = []
-    vulnerable = []
+    weak: List[str] = []
+    strong: List[str] = []
+    resistant: List[str] = []
+    vulnerable: List[str] = []
+    p_types: List[str] = []
     for pt in pokemon_types:
-        if pt in POKEMON_TYPE_DATA:
-            info = POKEMON_TYPE_DATA[pt]
+        pConvert = pt.capitalize()
+        if pConvert in POKEMON_TYPE_DATA:
+            p_types.append(pConvert)
+            info = POKEMON_TYPE_DATA[pConvert]
             if "Weak" in info:
                 info_weak = info["Weak"]
                 for i in info_weak:
@@ -60,4 +62,4 @@ def _load_pokemon_types(pokemon_types: List[str]) -> Type:
                 for i in info_vulnerable:
                     if i not in vulnerable:
                         vulnerable.append(i)
-    return Type(pokemon_types, weak, strong, resistant, vulnerable)
+    return Type(p_types, weak, strong, resistant, vulnerable)
