@@ -77,7 +77,6 @@ class CombatScreen():
         self._screen.blit(level, level_rect)
 
         p_line = pg.transform.scale(line_sprite, (detail_rect.width, detail_rect.height))
-        # TODO:  See if there is a way to put line inside a rect and have it join on the bottom right of the detail rect
         self._screen.blit(p_line, detail_rect.topleft)
 
     def _draw_enemy_details(self):
@@ -105,8 +104,10 @@ class CombatScreen():
         self._draw_details(p_pokemon, pLine, pokemon_rect, detail, self._combat._player_pokemon)
 
     def _draw_combat_details(self, combat_screen: Rect):
-        self._draw_enemy_details()
+        #TODO: Have player details be created so enemy details can be drawn in relation
+        # to the player rects
         self._draw_player_details(combat_screen)
+        self._draw_enemy_details()
 
     def attack_screen(self):
         winning_pokemon = self._combat.winning_pokemon()
