@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import pygame as pg
 from pygame.surface import Surface
+from pygame.rect import Rect
+from pokemon.base.base import Pokemon
 from pokemon.pokemons import GeneratePokemon
 from pokemon.combat.fight import Combat
 
@@ -13,7 +15,7 @@ pokemon_stat_font.bold = False
 
 combat_text_format = pg.font.SysFont("Arial", 25)
 
-combat_window_height = .22
+combat_window_height = .30
 
 white = 255, 255, 255
 off_white = 220, 220, 220
@@ -42,6 +44,69 @@ class CombatScreen():
         c1 = GeneratePokemon(l_range=(4, 4), pokemons=[1, 4, 19, 43])
         self._combat = Combat(p1, c1)
         self._combat_text = ""
+
+    def _draw_details(self,
+                      pokemon_sprite: Surface,
+                      line_sprite: Surface,
+                      pokemon_rect: Rect,
+                      detail_rect: Rect,
+                      pokemon: Pokemon):
+        poke = pg.transform.scale(pokemon_sprite, (pokemon_rect.width, pokemon_rect.height))
+        self._screen.blit(poke, pokemon_rect.topleft)
+
+        hp = pokemon_stat_font.render("{0} / {1}".format(
+                                                             pokemon.current_hitpoints,
+                                                             pokemon.hitpoints),
+                                      False, (111, 196, 169))
+        hp_rect = hp.get_rect(
+                              centerx=detail_rect.centerx + (detail_rect.width * .10),
+                              bottom=detail_rect.bottom - (detail_rect.height * .20))
+        hp_bar = pokemon_stat_font.render("------------------", False, (111, 196, 169))
+        hp_bar_rect = hp_bar.get_rect(midbottom=hp_rect.midtop)
+        hp_string = pokemon_stat_font.render("HP: ", False, (111, 196, 169))
+        hp_string_rect = hp_string.get_rect(midright=hp_bar_rect.midleft)
+        level = pokemon_stat_font.render(f"L:{pokemon.level}", False, (111, 196, 169))
+        level_rect = level.get_rect(midbottom=hp_bar_rect.midtop)
+        name = pokemon_stat_font.render(f"{pokemon.name}", False, (111, 196, 169))
+        name_rect = name.get_rect(midbottom=level_rect.midtop)
+
+        self._screen.blit(hp, hp_rect)
+        self._screen.blit(hp_bar, hp_bar_rect)
+        self._screen.blit(hp_string, hp_string_rect)
+        self._screen.blit(name, name_rect)
+        self._screen.blit(level, level_rect)
+
+        p_line = pg.transform.scale(line_sprite, (detail_rect.width, detail_rect.height))
+        # TODO:  See if there is a way to put line inside a rect and have it join on the bottom right of the detail rect
+        self._screen.blit(p_line, detail_rect.topleft)
+
+    def _draw_enemy_details(self):
+        pokemon_rect = pg.rect.Rect((self._screen.get_width() - int(self._screen.get_width()/2.7),
+                                     self._screen.get_height()/20,
+                                     self._screen.get_width()/3,
+                                     self._screen.get_height()/2.5))
+        detail = pg.rect.Rect((0 + (self._screen.get_width()/50),
+                               self._screen.get_height()/20,
+                               self._screen.get_width()/2.5,
+                               self._screen.get_height()/5.5))
+        self._draw_details(e_pokemon, eLine, pokemon_rect, detail, self._combat._computer_pokemon)
+
+    def _draw_player_details(self, combat_screen: Rect):
+        pokemon_height = self._screen.get_height() / 2.5
+        detail_height = self._screen.get_height() / 3.5
+        pokemon_rect = pg.rect.Rect((combat_screen.left + int(combat_screen.width / 10),
+                                     ((self._screen.get_height() - combat_screen.height) - pokemon_height),
+                                     combat_screen.width / 3,
+                                     pokemon_height))
+        detail = pg.rect.Rect((self._screen.get_width() / 2,
+                               (self._screen.get_height() - combat_screen.height) - detail_height,
+                               self._screen.get_width() / 2,
+                               detail_height))
+        self._draw_details(p_pokemon, pLine, pokemon_rect, detail, self._combat._player_pokemon)
+
+    def _draw_combat_details(self, combat_screen: Rect):
+        self._draw_enemy_details()
+        self._draw_player_details(combat_screen)
 
     def attack_screen(self):
         winning_pokemon = self._combat.winning_pokemon()
@@ -75,67 +140,7 @@ class CombatScreen():
                                     )
                                    )
 
-        # player pokemon
-        p_pokemon_rect = pg.rect.Rect((c_scrn_rect.left + int(self._screen.get_width()/10),
-                                      self._screen.get_height()/2.1,
-                                      self._screen.get_width()/3,
-                                      self._screen.get_height()/2.5))
-        p_poke = pg.transform.scale(p_pokemon, (p_pokemon_rect.width, p_pokemon_rect.height))
-        self._screen.blit(p_poke, p_pokemon_rect.topleft)
-
-        # player detail scn
-        p_detail = pg.rect.Rect((c_scrn_rect.right / 2,
-                                 self._screen.get_height()/2,
-                                 self._screen.get_width()/2,
-                                 self._screen.get_height()/3.5))
-
-        # enemy pokemon
-        e_pokemon_rect = pg.rect.Rect((c_scrn_rect.right - int(self._screen.get_width()/2.7),
-                                      self._screen.get_height()/20,
-                                      self._screen.get_width()/3,
-                                      self._screen.get_height()/2.5))
-        e_poke = pg.transform.scale(e_pokemon,  (e_pokemon_rect.width, e_pokemon_rect.height))
-        self._screen.blit(e_poke, e_pokemon_rect.topleft)
-
-        # enemy detail scn
-        e_detail = pg.rect.Rect((c_scrn_rect.left + (self._screen.get_width()/50),
-                                self._screen.get_height()/20,
-                                self._screen.get_width()/2.5,
-                                self._screen.get_height()/5.5))
-
-        # TODO: This trash.com this needs to be done a better way
-        p_name = pokemon_stat_font.render(f"{self._combat._player_pokemon.name}", False, (111, 196, 169))
-        p_name_rect = p_name.get_rect(center=(p_detail.centerx, p_detail.top + (p_detail.height * .10)))
-        p_level = pokemon_stat_font.render(f"L:{self._combat._player_pokemon.level}", False, (111, 196, 169))
-        p_level_rect = p_level.get_rect(midtop=p_name_rect.midbottom)
-        p_hp = pokemon_stat_font.render("HP: {0} / {1}".format(
-                                                               self._combat._player_pokemon.current_hitpoints,
-                                                               self._combat._player_pokemon.hitpoints),
-                                        False, (111, 196, 169))
-        p_hp_rect = p_hp.get_rect(centerx=p_detail.centerx, bottom=p_detail.bottom - (p_detail.height * .21))
-
-        e_name = pokemon_stat_font.render(f"{self._combat._computer_pokemon.name}", False, (111, 196, 169))
-        e_name_rect = e_name.get_rect(center=(e_detail.centerx, e_detail.top + (e_detail.height * .10)))
-        e_level = pokemon_stat_font.render(f"L:{self._combat._computer_pokemon.level}", False, (111, 196, 169))
-        e_level_rect = e_level.get_rect(midtop=e_name_rect.midbottom)
-        e_hp = pokemon_stat_font.render("HP: {0} / {1}".format(
-                                                               self._combat._computer_pokemon.current_hitpoints,
-                                                               self._combat._computer_pokemon.hitpoints),
-                                        False, (111, 196, 169))
-        e_hp_rect = e_hp.get_rect(centerx=e_detail.centerx, bottom=e_detail.bottom - (e_detail.height * .10))
-
-        self._screen.blit(p_hp, p_hp_rect)
-        self._screen.blit(p_name, p_name_rect)
-        self._screen.blit(p_level, p_level_rect)
-
-        self._screen.blit(e_hp, e_hp_rect)
-        self._screen.blit(e_name, e_name_rect)
-        self._screen.blit(e_level, e_level_rect)
-        e_line = pg.transform.scale(eLine, (e_detail.width, e_detail.height))
-        p_line = pg.transform.scale(pLine, (p_detail.width * .80, p_detail.height * .80))
-        # TODO:  See if there is a way to put line inside a rect and have it join on the bottom right of the detail rect
-        self._screen.blit(p_line, (p_detail.left + int(p_detail.left * .15), p_detail.top + int(p_detail.top * .15)))
-        self._screen.blit(e_line, e_detail.topleft)
+        self._draw_combat_details(c_scrn_rect)
 
         box_1 = pg.transform.scale(box1,
                                    (c_scrn_rect.width + int(c_scrn_rect.width / 100),
