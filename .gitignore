@@ -153,6 +153,3 @@ cython_debug/
 
 # ignore vscode things
 .vscode/
-
-# ignore assets
-assets/
