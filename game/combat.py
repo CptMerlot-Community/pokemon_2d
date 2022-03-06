@@ -104,8 +104,8 @@ class CombatScreen():
         self._draw_details(p_pokemon, pLine, pokemon_rect, detail, self._combat._player_pokemon)
 
     def _draw_combat_details(self, combat_screen: Rect):
-        #TODO: Have player details be created so enemy details can be drawn in relation
-        # to the player rects
+        # TODO: Have player details be created so enemy details
+        # can be drawn in relation to the player rects
         self._draw_player_details(combat_screen)
         self._draw_enemy_details()
 
