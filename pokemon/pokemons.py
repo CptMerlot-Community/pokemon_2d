@@ -1,6 +1,5 @@
 from typing import Tuple, List, Dict, Any
 import random
-import stringcase
 
 from pokemon.base.base import Pokemon, PokemonSchema, Base, Type
 from pokemon.data import POKEMON_DATA, POKEMON_TYPE_DATA
@@ -39,7 +38,7 @@ def _load_pokemon_types(pokemon_types: List[str]) -> Type:
     vulnerable: List[str] = []
     p_types: List[str] = []
     for pt in pokemon_types:
-        pConvert = stringcase.capitalcase(pt)
+        pConvert = pt.capitalize()
         if pConvert in POKEMON_TYPE_DATA:
             p_types.append(pConvert)
             info = POKEMON_TYPE_DATA[pConvert]
