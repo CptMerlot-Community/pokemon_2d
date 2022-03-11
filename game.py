@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import pygame as pg
+from pygame import freetype
 import random
 import time
 
@@ -15,8 +16,10 @@ random.seed(time.time_ns())
 # SCREEN_SIZE = pg.Vector2(640, 480)
 SCREEN_SIZE = pg.Vector2(800, 600)
 # SCREEN_SIZE = pg.Vector2(960, 720)
+# SCREEN_SIZE = pg.Vector2(1280, 960)
 
 pg.init()
+freetype.init()
 
 clock = pg.time.Clock()
 screen = pg.display.set_mode(SCREEN_SIZE)

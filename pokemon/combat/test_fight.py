@@ -33,3 +33,6 @@ def test_combat_attack_phase(player_pokemon, computer_pokemon):
     assert c._current_turn == c._player_pokemon
     c.attack()
     assert c._current_turn == c._computer_pokemon
+
+
+# TODO: write test for _dmg_type_mod
