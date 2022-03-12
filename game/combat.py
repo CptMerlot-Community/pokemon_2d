@@ -42,6 +42,7 @@ class CombatScreen():
         c1 = GeneratePokemon(l_range=(4, 4), pokemons=[1, 4, 19, 43])
         self._combat = Combat(p1, c1)
         self._combat_text = f"A wild {c1.name} has appeared."
+        self._winning_pokemon = None
 
     def _draw_details(self,
                       pokemon_sprite: Surface,
@@ -59,7 +60,7 @@ class CombatScreen():
         hp_rect = hp.get_rect(
                               centerx=detail_rect.centerx + (detail_rect.width * .10),
                               bottom=detail_rect.bottom - (detail_rect.height * .20))
-        hp_bar = self._game_loop.display_info.details_font.render("------------------", False, (111, 196, 169))
+        hp_bar = self._game_loop.display_info.details_font.render("--------------", False, (111, 196, 169))
         hp_bar_rect = hp_bar.get_rect(midbottom=hp_rect.midtop)
         hp_string = self._game_loop.display_info.details_font.render("HP: ", False, (111, 196, 169))
         hp_string_rect = hp_string.get_rect(midright=hp_bar_rect.midleft)
@@ -128,7 +129,7 @@ class CombatScreen():
                         if self._winning_pokemon is not None:
                             self._combat_text = f"{self._winning_pokemon.name} has won"
                     if event.key == pg.K_ESCAPE:
-                        self.start_new_combat()
+                        self._game_loop.StopRunning()
 
         self._screen.fill(off_white)
 
@@ -151,7 +152,7 @@ class CombatScreen():
                                    )
 
         c_txt_rect = Rect(c_scrn_rect.left + int(box_1.get_width() / 20),
-                          c_scrn_rect.top + int(box_1.get_height() / 5),
+                          c_scrn_rect.top + int(box_1.get_height() / 4),
                           box_1.get_width() - int(c_scrn_rect.width / 20),
                           box_1.get_height() - int(c_scrn_rect.height / 5))
 

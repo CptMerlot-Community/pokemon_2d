@@ -22,6 +22,8 @@ class MainScreen():
             if event.type == pg.KEYDOWN:
                 if event.key in (pg.K_RETURN, pg.K_SPACE):
                     self._game_loop.Combat()
+                if event.key == pg.K_ESCAPE:
+                    self._game_loop.StopRunning()
 
         self._screen.fill((0, 0, 0))
         wf = self._welcome_font.render("Welcome to Pokemon 2d", False, (255, 255, 255))

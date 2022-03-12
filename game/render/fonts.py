@@ -9,7 +9,7 @@ def word_wrap(surf: Surface, rect: Rect, text: str, font: Font, color=(0, 0, 0))
     width, height = rect.width, rect.height
     line_spacing = font.get_sized_height() + 2
     x, y = rect.left, rect.top + 20
-    space = font.get_rect(' ')
+    space = font.get_rect('  ')
     for word in words:
         bounds = font.get_rect(word)
         if x + bounds.width + bounds.x >= width:

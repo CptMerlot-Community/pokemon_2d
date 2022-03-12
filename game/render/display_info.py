@@ -15,7 +15,7 @@ class DisplayInfo:
         self._details_font_size = details_size
         self._talk_text_font_size = talk_text_font_size
 
-        self._details_font = pg.font.SysFont("Arial", self._details_font_size)
+        self._details_font = pg.font.Font("assets/fonts/dogicapixel.ttf", self._details_font_size)
         self._details_font.bold = False
 
         self._text_font = Font(file="assets/fonts/dogicapixel.ttf", size=self._talk_text_font_size)
