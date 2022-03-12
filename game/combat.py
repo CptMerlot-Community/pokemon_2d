@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Optional
 import pygame as pg
 from pygame.surface import Surface
 from pygame.rect import Rect
-from pokemon.base.base import Pokemon
+from pokemon.base.pokemon import Pokemon
 from pokemon.pokemons import GeneratePokemon
 from pokemon.combat.fight import Combat
 from game.render.fonts import word_wrap  # type: ignore

@@ -1,5 +1,5 @@
 import pytest
-from pokemon.base.base import Pokemon, PokemonSchema, Base, Name
+from pokemon.base.pokemon import Pokemon, PokemonSchema, Base, Name
 from .fight import Combat
 from pokemon.pokemons import _load_pokemon_types
 

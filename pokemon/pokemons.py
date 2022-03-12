@@ -1,7 +1,7 @@
 from typing import Tuple, List, Dict, Any
 import random
 
-from pokemon.base.base import Pokemon, PokemonSchema, Base, Type
+from pokemon.base.pokemon import Pokemon, PokemonSchema, Base, Type
 from pokemon.data import POKEMON_DATA, POKEMON_TYPE_DATA
 
 

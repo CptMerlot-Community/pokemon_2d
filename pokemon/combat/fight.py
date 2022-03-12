@@ -1,5 +1,5 @@
 from typing import Optional
-from pokemon.base.base import Pokemon
+from pokemon.base.pokemon import Pokemon
 import random
 import operator
 
