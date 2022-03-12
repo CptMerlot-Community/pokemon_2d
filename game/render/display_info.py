@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from attr import attributes
 import pygame as pg
-from pygame.freetype import Font
+from pygame.freetype import Font as FFont
+from pygame.font import Font
 from enum import Enum
 
 
@@ -18,7 +19,10 @@ class DisplayInfo:
         self._details_font = pg.font.Font("assets/fonts/dogicapixel.ttf", self._details_font_size)
         self._details_font.bold = False
 
-        self._text_font = Font(file="assets/fonts/dogicapixel.ttf", size=self._talk_text_font_size)
+        self._text_font = FFont(file="assets/fonts/dogicapixel.ttf", size=self._talk_text_font_size)
+
+        self._welcome_font = pg.font.SysFont("Arial", 40)
+        self._welcome_font.bold = True
 
     @property
     def vector(self) -> pg.Vector2:
@@ -29,8 +33,12 @@ class DisplayInfo:
         return self._details_font
 
     @property
-    def text_font(self) -> Font:
+    def text_font(self) -> FFont:
         return self._text_font
+
+    @property
+    def welcome_font(self) -> Font:
+        return self._welcome_font
 
 
 class DISPLAY_INFO(Enum):

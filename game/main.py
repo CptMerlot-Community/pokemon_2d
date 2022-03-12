@@ -11,8 +11,6 @@ if TYPE_CHECKING:
 class MainScreen():
     def __init__(self, screen: Surface, game_loop: GameLoop):
         self._screen = screen
-        self._welcome_font = pg.font.SysFont("Arial", 40)
-        self._welcome_font.bold = True
         self._game_loop = game_loop
 
     def welcome_render(self):
@@ -26,6 +24,6 @@ class MainScreen():
                     self._game_loop.StopRunning()
 
         self._screen.fill((0, 0, 0))
-        wf = self._welcome_font.render("Welcome to Pokemon 2d", False, (255, 255, 255))
+        wf = self._game_loop.display_info.welcome_font.render("Welcome to Pokemon 2d", False, (255, 255, 255))
         wf_rect = wf.get_rect(center=(self._screen.get_width() / 2, self._screen.get_height() / 2))
         self._screen.blit(wf, wf_rect)
