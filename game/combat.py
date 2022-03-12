@@ -7,16 +7,10 @@ from pokemon.base.base import Pokemon
 from pokemon.pokemons import GeneratePokemon
 from pokemon.combat.fight import Combat
 from game.render.fonts import word_wrap
-from pygame.freetype import Font
 
 
 if TYPE_CHECKING:
     from .loop import GameLoop
-
-pokemon_stat_font = pg.font.SysFont("Arial", 20)
-pokemon_stat_font.bold = False
-
-combat_text_format = Font(file="assets/fonts/dogicapixel.ttf", size=40)
 
 combat_window_height = .30
 
@@ -58,20 +52,20 @@ class CombatScreen():
         poke = pg.transform.scale(pokemon_sprite, (pokemon_rect.width, pokemon_rect.height))
         self._screen.blit(poke, pokemon_rect.topleft)
 
-        hp = pokemon_stat_font.render("{0} / {1}".format(
+        hp = self._game_loop.display_info.details_font.render("{0} / {1}".format(
                                                              pokemon.current_hitpoints,
                                                              pokemon.hitpoints),
                                       False, (111, 196, 169))
         hp_rect = hp.get_rect(
                               centerx=detail_rect.centerx + (detail_rect.width * .10),
                               bottom=detail_rect.bottom - (detail_rect.height * .20))
-        hp_bar = pokemon_stat_font.render("------------------", False, (111, 196, 169))
+        hp_bar = self._game_loop.display_info.details_font.render("------------------", False, (111, 196, 169))
         hp_bar_rect = hp_bar.get_rect(midbottom=hp_rect.midtop)
-        hp_string = pokemon_stat_font.render("HP: ", False, (111, 196, 169))
+        hp_string = self._game_loop.display_info.details_font.render("HP: ", False, (111, 196, 169))
         hp_string_rect = hp_string.get_rect(midright=hp_bar_rect.midleft)
-        level = pokemon_stat_font.render(f"L:{pokemon.level}", False, (111, 196, 169))
+        level = self._game_loop.display_info.details_font.render(f"L:{pokemon.level}", False, (111, 196, 169))
         level_rect = level.get_rect(midbottom=hp_bar_rect.midtop)
-        name = pokemon_stat_font.render(f"{pokemon.name}", False, (111, 196, 169))
+        name = self._game_loop.display_info.details_font.render(f"{pokemon.name}", False, (111, 196, 169))
         name_rect = name.get_rect(midbottom=level_rect.midtop)
 
         self._screen.blit(hp, hp_rect)
@@ -161,6 +155,6 @@ class CombatScreen():
                           box_1.get_width() - int(c_scrn_rect.width / 20),
                           box_1.get_height() - int(c_scrn_rect.height / 5))
 
-        word_wrap(self._screen, c_txt_rect, self._combat_text, combat_text_format, (0, 0, 0))
+        word_wrap(self._screen, c_txt_rect, self._combat_text, self._game_loop.display_info.text_font, (0, 0, 0))
 
         self._screen.blit(box_1, c_scrn_rect)
