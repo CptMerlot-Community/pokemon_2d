@@ -56,17 +56,17 @@ class CombatScreen():
         hp = self._game_loop.display_info.details_font.render("{0} / {1}".format(
                                                              pokemon.current_hitpoints,
                                                              pokemon.hitpoints),
-                                      False, (111, 196, 169))
+                                      False, (0, 0, 0))
         hp_rect = hp.get_rect(
                               centerx=detail_rect.centerx + (detail_rect.width * .10),
                               bottom=detail_rect.bottom - (detail_rect.height * .20))
-        hp_bar = self._game_loop.display_info.details_font.render("--------------", False, (111, 196, 169))
+        hp_bar = self._game_loop.display_info.details_font.render("------------", False, (0, 0, 0))
         hp_bar_rect = hp_bar.get_rect(midbottom=hp_rect.midtop)
-        hp_string = self._game_loop.display_info.details_font.render("HP: ", False, (111, 196, 169))
+        hp_string = self._game_loop.display_info.details_font.render("HP: ", False, (0, 0, 0))
         hp_string_rect = hp_string.get_rect(midright=hp_bar_rect.midleft)
-        level = self._game_loop.display_info.details_font.render(f"L:{pokemon.level}", False, (111, 196, 169))
+        level = self._game_loop.display_info.details_font.render(f"L:{pokemon.level}", False, (0, 0, 0))
         level_rect = level.get_rect(midbottom=hp_bar_rect.midtop)
-        name = self._game_loop.display_info.details_font.render(f"{pokemon.name}", False, (111, 196, 169))
+        name = self._game_loop.display_info.details_font.render(f"{pokemon.name}", False, (0, 0, 0))
         name_rect = name.get_rect(midbottom=level_rect.midtop)
 
         self._screen.blit(hp, hp_rect)

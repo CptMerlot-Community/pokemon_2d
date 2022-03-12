@@ -42,12 +42,12 @@ class DISPLAY_INFO(Enum):
 
 def get_display_info(display_info: DISPLAY_INFO) -> DisplayInfo:
     if display_info.value == DISPLAY_INFO.R_480_640.value:
-        return DisplayInfo(pg.Vector2(640, 480), 12, 30)
+        return DisplayInfo(pg.Vector2(640, 480), 18, 28)
     elif display_info.value == DISPLAY_INFO.R_800_600.value:
-        return DisplayInfo(pg.Vector2(800, 600), 20, 40)
+        return DisplayInfo(pg.Vector2(800, 600), 22, 35)
     elif display_info.value == DISPLAY_INFO.R_960_720.value:
-        return DisplayInfo(pg.Vector2(960, 720), 30, 50)
+        return DisplayInfo(pg.Vector2(960, 720), 28, 50)
     elif display_info.value == DISPLAY_INFO.R_1280_960.value:
         return DisplayInfo(pg.Vector2(1280, 960), 40, 60)
     else:
-        return DisplayInfo(pg.Vector2(640, 480), 12, 30)
+        return DisplayInfo(pg.Vector2(640, 480), 18, 28)
