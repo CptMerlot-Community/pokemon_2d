@@ -1,4 +1,4 @@
-from pygame.freetype import Font
+from pygame.freetype import Font  # type: ignore
 from pygame.rect import Rect
 from pygame.surface import Surface
 

@@ -3,7 +3,7 @@ from pygame.time import Clock
 from pygame.surface import Surface
 from game.main import MainScreen
 from .combat import CombatScreen
-from .render.display_info import DisplayInfo
+from .render.display_info import DisplayInfo  # type: ignore
 
 
 class GameLoop():

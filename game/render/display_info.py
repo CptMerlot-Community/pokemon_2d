@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from attr import attributes
 import pygame as pg
-from pygame.freetype import Font as FFont
+from pygame.freetype import Font as FFont  # type: ignore
 from pygame.font import Font
 from enum import Enum
 

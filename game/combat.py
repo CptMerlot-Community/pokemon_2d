@@ -6,7 +6,7 @@ from pygame.rect import Rect
 from pokemon.base.base import Pokemon
 from pokemon.pokemons import GeneratePokemon
 from pokemon.combat.fight import Combat
-from game.render.fonts import word_wrap
+from game.render.fonts import word_wrap  # type: ignore
 
 
 if TYPE_CHECKING:
