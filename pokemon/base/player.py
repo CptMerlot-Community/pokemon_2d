@@ -18,9 +18,9 @@ class PokemonStatus:
 @dataclass
 class PlayerPokemonStatus:
     def __init__(self, pokemons: List[Pokemon]):
-        self._pokemon: List[PokemonStatus] = []
+        self.pokemon: List[PokemonStatus] = []
         for pokemon in pokemons:
-            self._pokemon.append(PokemonStatus(pokemon))
+            self.pokemon.append(PokemonStatus(pokemon))
 
 
 class Player():
