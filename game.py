@@ -12,7 +12,7 @@ freetype.init()
 
 def main():
     from game.render.display_info import get_display_info, DISPLAY_INFO
-    dp = get_display_info(DISPLAY_INFO.R_800_600)
+    dp = get_display_info(DISPLAY_INFO.R_1280_960)
     screen = pg.display.set_mode(dp.vector)
 
     from game.loop import GameLoop
