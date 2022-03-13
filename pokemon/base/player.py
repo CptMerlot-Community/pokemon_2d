@@ -29,7 +29,7 @@ class Player():
     _name: str = ""
     _active_pokemon: Optional[Pokemon] = None
 
-    def __init__(self, name: Optional[str] = ""):
+    def __init__(self, name: str = ""):
         self._uuid = uuid4()
         self._name = name
 
@@ -66,7 +66,8 @@ class Player():
 
     def remove_pokemon(self, location_id: int):
         if self._pokemons[location_id] != self._active_pokemon:
-            self._pokemons.remove(location_id)
+            # TODO: this will discard a pokemon
+            self._pokemons.pop(location_id)
 
     def get_pokemon_status(self) -> PlayerPokemonStatus:
         """Return a list of information regarding current pokemon and their status

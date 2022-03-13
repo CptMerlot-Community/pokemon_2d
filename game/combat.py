@@ -104,6 +104,8 @@ class CombatScreen():
                                (self._screen.get_height() - combat_screen.height) - detail_height,
                                self._screen.get_width()/2.5,
                                detail_height))
+        if self._combat is None:
+            raise BaseException("Combat has not started?")
         self._draw_details(p_pokemon, pLine, pokemon_rect, detail, self._combat._player_pokemon)
 
     def _draw_combat_details(self, combat_screen: Rect):
