@@ -1,5 +1,5 @@
 import pytest
-from .base import PokemonSchema, Base, Pokemon
+from .pokemon import PokemonSchema, Base, Pokemon
 
 
 @pytest.fixture

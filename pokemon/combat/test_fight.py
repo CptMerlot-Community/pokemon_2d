@@ -1,5 +1,5 @@
 import pytest
-from pokemon.base.base import Pokemon, PokemonSchema, Base, Name
+from pokemon.base.pokemon import Pokemon, PokemonSchema, Base, Name
 from .fight import Combat
 from pokemon.pokemons import _load_pokemon_types
 
@@ -33,3 +33,6 @@ def test_combat_attack_phase(player_pokemon, computer_pokemon):
     assert c._current_turn == c._player_pokemon
     c.attack()
     assert c._current_turn == c._computer_pokemon
+
+
+# TODO: write test for _dmg_type_mod

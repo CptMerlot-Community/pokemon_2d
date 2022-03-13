@@ -1,5 +1,5 @@
 from typing import Optional
-from pokemon.base.base import Pokemon
+from pokemon.base.pokemon import Pokemon
 import random
 import operator
 
@@ -15,6 +15,13 @@ class Combat():
         self._player_pokemon = player_pokemon
         self._computer_pokemon = computer_pokemon
         self._current_turn: Pokemon = self._first_action()
+
+    def send_in_new_player_pokemon(self, pokemon: Pokemon):
+        if self._current_turn == self._player_pokemon:
+            self._player_pokemon = pokemon
+            self._current_turn = self._player_pokemon
+        else:
+            self._player_pokemon = pokemon
 
     @property
     def attack_pokemon(self):
@@ -40,11 +47,11 @@ class Combat():
     def _is_defending_pokemon_dead(self) -> bool:
         return not self.defending_pokemon.alive
 
-    def winning_pokemon(self) -> Optional[Pokemon]:
+    def pokemon_fainted(self) -> Optional[Pokemon]:
         if not self.defending_pokemon.alive:
-            return self.attack_pokemon
-        if not self.attack_pokemon.alive:
             return self.defending_pokemon
+        if not self.attack_pokemon.alive:
+            return self.attack_pokemon
         return None
 
     def attack(self) -> int:
