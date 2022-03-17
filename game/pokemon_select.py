@@ -43,9 +43,9 @@ class PokemonSelectScreen():
             if len(rect_list) != 0:
                 parent_rect = rect_list[p_index-1]
             rect_list.append(self.create_pokemon_rect(p_index, self._pokemon_status.pokemon[p_index], parent_rect))
+        return rect_list
 
     def render(self):
-        # FIXME: move this out into its own event loop and up
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self._combat_screen.game_loop.StopRunning()

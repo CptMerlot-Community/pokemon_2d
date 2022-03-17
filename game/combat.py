@@ -120,45 +120,44 @@ class CombatScreen():
         if self._combat is None:
             self.start_new_combat()
 
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                self.game_loop.StopRunning()
-            if self._fainted_pokemon is not None:
-                if event.type == pg.KEYDOWN:
-                    if event.key in (pg.K_RETURN, pg.K_SPACE, pg.K_ESCAPE):
-                        if self._fainted_pokemon is self.game_loop.player.active_pokemon:
-                            if not self.game_loop.player.check_if_available_pokemons():
-                                self.game_loop.GameOver(True)
-                            else:
-                                self.prompt_for_pokemon_select(True)
-                            # player_pokemon_status = self.game_loop.player.get_pokemon_status()
-                            # TO GET SOME INPUT for next pokemon
-                            # self.game_loop.player.get_pokemon(1)
-                            # self._combat.send_in_new_player_pokemon(self.game_loop.player.active_pokemon)
-                            # self._fainted_pokemon = self._combat.pokemon_fainted()
-                        else:
-                            self.start_new_combat()
-                        # self.game_loop.Combat(False)
-                        # self.start_new_combat()
-            else:
-                if event.type == pg.KEYDOWN:
-                    if event.key in (pg.K_RETURN, pg.K_SPACE):
-                        attk_pokemon = self._combat.attack_pokemon.name
-                        def_pokemon = self._combat.defending_pokemon.name
-                        dmg = self._combat.attack()
-                        self._combat_text = f"{attk_pokemon} hits {def_pokemon} for {dmg}"
-                        self._fainted_pokemon = self._combat.pokemon_fainted()
-                        if self._fainted_pokemon is not None:
-                            self._combat_text = f"{self._fainted_pokemon.name} has fainted..."
-                    if event.key == pg.K_ESCAPE:
-                        self.game_loop.StopRunning()
-
         self._screen.fill(off_white)
 
-        if self._fainted_pokemon is not None:
-            if self._prompt_for_pokemon_select:
-                self._selector_screen.render()
+        if self._prompt_for_pokemon_select:
+            self._selector_screen.render()
         else:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.game_loop.StopRunning()
+                if self._fainted_pokemon is not None:
+                    if event.type == pg.KEYDOWN:
+                        if event.key in (pg.K_RETURN, pg.K_SPACE, pg.K_ESCAPE):
+                            if self._fainted_pokemon is self.game_loop.player.active_pokemon:
+                                if not self.game_loop.player.check_if_available_pokemons():
+                                    self.game_loop.GameOver(True)
+                                else:
+                                    self.prompt_for_pokemon_select(True)
+                                # player_pokemon_status = self.game_loop.player.get_pokemon_status()
+                                # TO GET SOME INPUT for next pokemon
+                                # self.game_loop.player.get_pokemon(1)
+                                # self._combat.send_in_new_player_pokemon(self.game_loop.player.active_pokemon)
+                                # self._fainted_pokemon = self._combat.pokemon_fainted()
+                            else:
+                                self.start_new_combat()
+                            # self.game_loop.Combat(False)
+                            # self.start_new_combat()
+                else:
+                    if event.type == pg.KEYDOWN:
+                        if event.key in (pg.K_RETURN, pg.K_SPACE):
+                            attk_pokemon = self._combat.attack_pokemon.name
+                            def_pokemon = self._combat.defending_pokemon.name
+                            dmg = self._combat.attack()
+                            self._combat_text = f"{attk_pokemon} hits {def_pokemon} for {dmg}"
+                            self._fainted_pokemon = self._combat.pokemon_fainted()
+                            if self._fainted_pokemon is not None:
+                                self._combat_text = f"{self._fainted_pokemon.name} has fainted..."
+                        if event.key == pg.K_ESCAPE:
+                            self.game_loop.StopRunning()
+
             # combat screen
             c_scrn_rect = pg.draw.rect(self._screen,
                                        (off_white),
