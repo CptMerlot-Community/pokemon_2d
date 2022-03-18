@@ -132,7 +132,9 @@ class CombatScreen():
                                     ((self._screen.get_height() - combat_txt_screen.height) -
                                     self.game_loop.display_info.pokemon_size[1]),
                                     *self.game_loop.display_info.pokemon_size)
-        detail_rect = pg.rect.Rect((self._screen.get_width() - self._screen.get_width()/2.5) - self._screen.get_width()/50,
+        detail_rect = pg.rect.Rect((self._screen.get_width() -
+                                    self._screen.get_width()/2.5) -
+                                   self._screen.get_width()/50,
                                    (self._screen.get_height() - combat_txt_screen.height) -
                                    self.game_loop.display_info.detail_size[1],
                                    *self.game_loop.display_info.detail_size)
