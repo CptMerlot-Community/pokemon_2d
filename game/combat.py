@@ -157,15 +157,8 @@ class CombatScreen():
                                     self.game_loop.GameOver(True)
                                 else:
                                     self._pokemon_selector_screen = PokemonSelectScreen(self._screen, self)
-                                # player_pokemon_status = self.game_loop.player.get_pokemon_status()
-                                # TO GET SOME INPUT for next pokemon
-                                # self.game_loop.player.get_pokemon(1)
-                                # self._combat.send_in_new_player_pokemon(self.game_loop.player.active_pokemon)
-                                # self._fainted_pokemon = self._combat.pokemon_fainted()
                             else:
                                 self.start_new_combat()
-                            # self.game_loop.Combat(False)
-                            # self.start_new_combat()
                 else:
                     if event.type == pg.KEYDOWN:
                         if event.key in (pg.K_RETURN, pg.K_SPACE):
