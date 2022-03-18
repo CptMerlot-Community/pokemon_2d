@@ -20,6 +20,7 @@ class GameLoop():
         self.player: Player = Player(name="CptMerlot")
         self.player.add_pokemon(GeneratePokemon(l_range=(4, 4), pokemons=[25]))
         self.player.add_pokemon(GeneratePokemon(l_range=(4, 4), pokemons=[1]))
+        self.player.add_pokemon(GeneratePokemon(l_range=(4, 4), pokemons=[4]))
         self._c = CombatScreen(self._screen, self)
         self._w = MainScreen(self._screen, self)
 

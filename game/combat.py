@@ -31,13 +31,12 @@ e_pokemon = pg.image.load("./assets/Character_9_baby_pink.png").convert_alpha()
 class CombatScreen():
     _combat: Optional[Combat] = None
     _fainted_pokemon: Optional[Pokemon] = None
-    _prompt_for_pokemon_select = False
+    _pokemon_selector_screen: Optional[PokemonSelectScreen] = None
 
     def __init__(self, screen: Surface, game_loop: GameLoop):
         self._screen = screen
         self._combat_text = ""
         self.game_loop = game_loop
-        self._selector_screen = PokemonSelectScreen(self._screen, self)
 
     def start_new_combat(self):
         c1 = GeneratePokemon(l_range=(4, 4), pokemons=[1, 4, 19, 43])
@@ -45,8 +44,11 @@ class CombatScreen():
         self._combat_text = f"A wild {c1.name} has appeared."
         self._fainted_pokemon = None
 
-    def prompt_for_pokemon_select(self, b: bool):
-        self._prompt_for_pokemon_select = b
+    def add_selected_player_pokemon(self, pokemon_id: int):
+        self.game_loop.player.get_pokemon(pokemon_id)
+        if self._combat is not None:
+            self._combat.send_in_new_player_pokemon(self.game_loop.player.active_pokemon)
+            self._fainted_pokemon = self._combat.pokemon_fainted()
 
     def _draw_details(self,
                       pokemon_sprite: Surface,
@@ -122,8 +124,8 @@ class CombatScreen():
 
         self._screen.fill(off_white)
 
-        if self._prompt_for_pokemon_select:
-            self._selector_screen.render()
+        if self._pokemon_selector_screen is not None:
+            self._pokemon_selector_screen.render()
         else:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
@@ -135,7 +137,7 @@ class CombatScreen():
                                 if not self.game_loop.player.check_if_available_pokemons():
                                     self.game_loop.GameOver(True)
                                 else:
-                                    self.prompt_for_pokemon_select(True)
+                                    self._pokemon_selector_screen = PokemonSelectScreen(self._screen, self)
                                 # player_pokemon_status = self.game_loop.player.get_pokemon_status()
                                 # TO GET SOME INPUT for next pokemon
                                 # self.game_loop.player.get_pokemon(1)
