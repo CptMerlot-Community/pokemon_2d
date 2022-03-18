@@ -16,12 +16,13 @@ class Combat():
         self._computer_pokemon = computer_pokemon
         self._current_turn: Pokemon = self._first_action()
 
-    def send_in_new_player_pokemon(self, pokemon: Pokemon):
-        if self._current_turn == self._player_pokemon:
-            self._player_pokemon = pokemon
-            self._current_turn = self._player_pokemon
-        else:
-            self._player_pokemon = pokemon
+    def send_in_new_player_pokemon(self, pokemon: Optional[Pokemon]):
+        if pokemon is not None:
+            if self._current_turn == self._player_pokemon:
+                self._player_pokemon = pokemon
+                self._current_turn = self._player_pokemon
+            else:
+                self._player_pokemon = pokemon
 
     @property
     def attack_pokemon(self):
@@ -60,6 +61,7 @@ class Combat():
         self._current_turn = self.defending_pokemon
         return dmg
 
+    # TODO: Make roll attack take in the AP and Defense to reduce logic from roll attack and roll special
     def _roll_attack(self) -> int:
         mod = operator.truediv(self.attack_pokemon.attack_power, self.defending_pokemon.defense)
         if mod > 1:

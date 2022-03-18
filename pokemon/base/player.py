@@ -18,9 +18,9 @@ class PokemonStatus:
 @dataclass
 class PlayerPokemonStatus:
     def __init__(self, pokemons: List[Pokemon]):
-        self._pokemon: List[PokemonStatus] = []
+        self.pokemon: List[PokemonStatus] = []
         for pokemon in pokemons:
-            self._pokemon.append(PokemonStatus(pokemon))
+            self.pokemon.append(PokemonStatus(pokemon))
 
 
 class Player():
@@ -66,7 +66,7 @@ class Player():
 
     def remove_pokemon(self, location_id: int):
         if self._pokemons[location_id] != self._active_pokemon:
-            # TODO: this will discard a pokemon
+            # this will discard a pokemon
             self._pokemons.pop(location_id)
 
     def get_pokemon_status(self) -> PlayerPokemonStatus:

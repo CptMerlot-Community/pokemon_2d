@@ -7,6 +7,7 @@ from pokemon.base.pokemon import Pokemon
 from pokemon.pokemons import GeneratePokemon
 from pokemon.combat.fight import Combat
 from game.render.fonts import word_wrap  # type: ignore
+from game.pokemon_select import PokemonSelectScreen
 
 
 if TYPE_CHECKING:
@@ -30,7 +31,7 @@ e_pokemon = pg.image.load("./assets/Character_9_baby_pink.png").convert_alpha()
 class CombatScreen():
     _combat: Optional[Combat] = None
     _fainted_pokemon: Optional[Pokemon] = None
-    _prompt_for_pokemon_select = False
+    _pokemon_selector_screen: Optional[PokemonSelectScreen] = None
 
     def __init__(self, screen: Surface, game_loop: GameLoop):
         self._screen = screen
@@ -43,8 +44,12 @@ class CombatScreen():
         self._combat_text = f"A wild {c1.name} has appeared."
         self._fainted_pokemon = None
 
-    def prompt_for_pokemon_select(self, b: bool):
-        self._prompt_for_pokemon_select = b
+    def add_selected_player_pokemon(self, pokemon_id: int):
+        self.game_loop.player.get_pokemon(pokemon_id)
+        if self._combat is not None:
+            self._combat.send_in_new_player_pokemon(self.game_loop.player.active_pokemon)
+            self._fainted_pokemon = self._combat.pokemon_fainted()
+            self._pokemon_selector_screen = None
 
     def _draw_details(self,
                       pokemon_sprite: Surface,
@@ -55,55 +60,73 @@ class CombatScreen():
         poke = pg.transform.scale(pokemon_sprite, (pokemon_rect.width, pokemon_rect.height))
         self._screen.blit(poke, pokemon_rect.topleft)
 
-        hp = self.game_loop.display_info.details_font.render("{0} / {1}".format(
-                                                             pokemon.current_hitpoints,
-                                                             pokemon.hitpoints),
-                                                             False, (0, 0, 0))
-        hp_rect = hp.get_rect(
-                              centerx=detail_rect.centerx + (detail_rect.width * .10),
-                              bottom=detail_rect.bottom - (detail_rect.height * .20))
-        hp_bar = self.game_loop.display_info.details_font.render("------------", False, (0, 0, 0))
-        hp_bar_rect = hp_bar.get_rect(midbottom=hp_rect.midtop)
-        hp_string = self.game_loop.display_info.details_font.render("HP: ", False, (0, 0, 0))
-        hp_string_rect = hp_string.get_rect(midright=hp_bar_rect.midleft)
-        level = self.game_loop.display_info.details_font.render(f"L:{pokemon.level}", False, (0, 0, 0))
-        level_rect = level.get_rect(midbottom=hp_bar_rect.midtop)
-        name = self.game_loop.display_info.details_font.render(f"{pokemon.name}", False, (0, 0, 0))
-        name_rect = name.get_rect(midbottom=level_rect.midtop)
-
-        self._screen.blit(hp, hp_rect)
-        self._screen.blit(hp_bar, hp_bar_rect)
-        self._screen.blit(hp_string, hp_string_rect)
-        self._screen.blit(name, name_rect)
-        self._screen.blit(level, level_rect)
+        hp_rect = self._draw_hp_detail(pokemon, detail_rect)
+        hp_bar_rect = self._draw_hp_bar_detail(pokemon, hp_rect)
+        hp_level_rect = self._draw_level_detail(pokemon.level, hp_bar_rect)
+        _ = self._draw_name_detail(pokemon.name, hp_level_rect)
 
         p_line = pg.transform.scale(line_sprite, (detail_rect.width, detail_rect.height))
         self._screen.blit(p_line, detail_rect.topleft)
 
+    def _draw_level_detail(self, pokemon_level: int, hp_bar_rect: Rect) -> Rect:
+        level = self.game_loop.display_info.details_font.render(f"L:{pokemon_level}", False, (0, 0, 0))
+        level_rect = level.get_rect(midbottom=hp_bar_rect.midtop)
+        self._screen.blit(level, level_rect)
+        return level_rect
+
+    def _draw_name_detail(self, pokemon_name: str, level_rect: Rect) -> Rect:
+        name = self.game_loop.display_info.details_font.render(f"{pokemon_name}", False, (0, 0, 0))
+        name_rect = name.get_rect(midbottom=level_rect.midtop)
+        self._screen.blit(name, name_rect)
+        return name_rect
+
+    def _draw_hp_bar_detail(self, pokemon: Pokemon, hp_rect: Rect) -> Rect:
+        hp_precent = (pokemon.current_hitpoints / pokemon.hitpoints)
+        hp_bar_rect = pg.draw.rect(self._screen, (0, 0, 0), (hp_rect.centerx,
+                                   hp_rect.top-hp_rect.height, 150, int(hp_rect.height * .50)), 1)
+        hp_precent_color = (7, 117, 1)
+        if hp_precent < 0.30:
+            hp_precent_color = (255, 76, 5)
+        elif hp_precent < 0.50:
+            hp_precent_color = (167, 176, 2)
+        pg.draw.rect(self._screen, hp_precent_color, (*hp_bar_rect.topleft,
+                                                      150*hp_precent, int(hp_rect.height * .50)), 0)
+
+        hp_string = self.game_loop.display_info.details_font.render("HP:", False, (0, 0, 0))
+        hp_string_rect = hp_string.get_rect(midright=hp_bar_rect.midleft)
+        self._screen.blit(hp_string, hp_string_rect)
+        return hp_bar_rect
+
+    def _draw_hp_detail(self, pokemon: Pokemon, detail_rect: Rect) -> Rect:
+        hp = self.game_loop.display_info.details_font.render("{0} / {1}".format(
+                                                             pokemon.current_hitpoints,
+                                                             pokemon.hitpoints),
+                                                             False, (0, 0, 0))
+        hp_rect = hp.get_rect(centerx=detail_rect.centerx,
+                              bottom=detail_rect.bottom - (detail_rect.height * .15))
+        self._screen.blit(hp, hp_rect)
+        return hp_rect
+
     def _draw_enemy_details(self):
-        pokemon_height = self._screen.get_height() / 2.5
-        detail_height = self._screen.get_height()/5.5
         pokemon_rect = pg.rect.Rect((self._screen.get_width() - int(self._screen.get_width()/2.7),
                                      self._screen.get_height()/20,
-                                     self._screen.get_width()/3,
-                                     pokemon_height))
+                                     *self.game_loop.display_info.pokemon_size))
         detail = pg.rect.Rect((0 + (self._screen.get_width()/50),
                                self._screen.get_height()/20,
-                               self._screen.get_width()/2.5,
-                               detail_height))
+                               *self.game_loop.display_info.detail_size))
         self._draw_details(e_pokemon, eLine, pokemon_rect, detail, self._combat._computer_pokemon)
 
     def _draw_player_details(self, combat_screen: Rect):
-        pokemon_height = self._screen.get_height() / 2.5
-        detail_height = self._screen.get_height()/5.5
-        pokemon_rect = pg.rect.Rect((combat_screen.left + int(combat_screen.width / 10),
-                                     ((self._screen.get_height() - combat_screen.height) - pokemon_height),
-                                     combat_screen.width / 3,
-                                     pokemon_height))
-        detail = pg.rect.Rect(((self._screen.get_width() - self._screen.get_width()/2.5) - self._screen.get_width()/50,
-                               (self._screen.get_height() - combat_screen.height) - detail_height,
-                               self._screen.get_width()/2.5,
-                               detail_height))
+        # TODO: move dynamic sizing into the display_info class
+
+        pokemon_rect = pg.rect.Rect(combat_screen.left + int(combat_screen.width / 10),
+                                    ((self._screen.get_height() - combat_screen.height) -
+                                     self.game_loop.display_info.pokemon_size[1]),
+                                    *self.game_loop.display_info.pokemon_size)
+        detail = pg.rect.Rect((self._screen.get_width() - self._screen.get_width()/2.5) - self._screen.get_width()/50,
+                              (self._screen.get_height() - combat_screen.height) -
+                              self.game_loop.display_info.detail_size[1],
+                              *self.game_loop.display_info.detail_size)
         if self._combat is None:
             raise BaseException("Combat has not started?")
         self._draw_details(p_pokemon, pLine, pokemon_rect, detail, self._combat._player_pokemon)
@@ -118,67 +141,60 @@ class CombatScreen():
         if self._combat is None:
             self.start_new_combat()
 
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                self.game_loop.StopRunning()
-            if self._fainted_pokemon is not None:
-                if self._prompt_for_pokemon_select:
-                    # Display pokemon select screen
-                    pass
-                if event.type == pg.KEYDOWN:
-                    if event.key in (pg.K_RETURN, pg.K_SPACE, pg.K_ESCAPE):
-                        if self._fainted_pokemon is self.game_loop.player.active_pokemon:
-                            if not self.game_loop.player.check_if_available_pokemons():
-                                self.game_loop.GameOver(True)
-                            else:
-                                self.prompt_for_pokemon_select(True)
-                            player_pokemon_status = self.game_loop.player.get_pokemon_status()
-                            # TO GET SOME INPUT for next pokemon
-                            self.game_loop.player.get_pokemon(1)
-                            self._combat.send_in_new_player_pokemon(self.game_loop.player.active_pokemon)
-                            self._fainted_pokemon = self._combat.pokemon_fainted()
-                        else:
-                            self.start_new_combat()
-                        # self.game_loop.Combat(False)
-                        # self.start_new_combat()
-            else:
-                if event.type == pg.KEYDOWN:
-                    if event.key in (pg.K_RETURN, pg.K_SPACE):
-                        attk_pokemon = self._combat.attack_pokemon.name
-                        def_pokemon = self._combat.defending_pokemon.name
-                        dmg = self._combat.attack()
-                        self._combat_text = f"{attk_pokemon} hits {def_pokemon} for {dmg}"
-                        self._fainted_pokemon = self._combat.pokemon_fainted()
-                        if self._fainted_pokemon is not None:
-                            self._combat_text = f"{self._fainted_pokemon.name} has fainted..."
-                    if event.key == pg.K_ESCAPE:
-                        self.game_loop.StopRunning()
-
         self._screen.fill(off_white)
 
-        # combat screen
-        c_scrn_rect = pg.draw.rect(self._screen,
-                                   (off_white),
-                                   (-10,
-                                    int(self._screen.get_height()-(self._screen.get_height()*combat_window_height)),
-                                    self._screen.get_width(),
-                                    int(self._screen.get_height()*combat_window_height)
-                                    )
-                                   )
+        if self._pokemon_selector_screen is not None:
+            self._pokemon_selector_screen.render()
+        else:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.game_loop.StopRunning()
+                if self._fainted_pokemon is not None:
+                    if event.type == pg.KEYDOWN:
+                        if event.key in (pg.K_RETURN, pg.K_SPACE, pg.K_ESCAPE):
+                            if self._fainted_pokemon is self.game_loop.player.active_pokemon:
+                                if not self.game_loop.player.check_if_available_pokemons():
+                                    self.game_loop.GameOver(True)
+                                else:
+                                    self._pokemon_selector_screen = PokemonSelectScreen(self._screen, self)
+                            else:
+                                self.start_new_combat()
+                else:
+                    if event.type == pg.KEYDOWN:
+                        if event.key in (pg.K_RETURN, pg.K_SPACE):
+                            attk_pokemon = self._combat.attack_pokemon.name
+                            def_pokemon = self._combat.defending_pokemon.name
+                            dmg = self._combat.attack()
+                            self._combat_text = f"{attk_pokemon} hits {def_pokemon} for {dmg}"
+                            self._fainted_pokemon = self._combat.pokemon_fainted()
+                            if self._fainted_pokemon is not None:
+                                self._combat_text = f"{self._fainted_pokemon.name} has fainted..."
+                        if event.key == pg.K_ESCAPE:
+                            self.game_loop.StopRunning()
 
-        self._draw_combat_details(c_scrn_rect)
+            # combat screen
+            c_scrn_rect = pg.draw.rect(self._screen,
+                                       (off_white),
+                                       (-10,
+                                        int(self._screen.get_height()-(self._screen.get_height()*combat_window_height)),
+                                           self._screen.get_width(),
+                                           int(self._screen.get_height()*combat_window_height)
+                                        )
+                                       )
 
-        box_1 = pg.transform.scale(box1,
-                                   (c_scrn_rect.width,
-                                    c_scrn_rect.height,
-                                    )
-                                   )
+            self._draw_combat_details(c_scrn_rect)
 
-        c_txt_rect = Rect(c_scrn_rect.left + int(box_1.get_width() / 20),
-                          c_scrn_rect.top + int(box_1.get_height() / 4),
-                          box_1.get_width() - int(c_scrn_rect.width / 20),
-                          box_1.get_height() - int(c_scrn_rect.height / 5))
+            box_1 = pg.transform.scale(box1,
+                                       (c_scrn_rect.width,
+                                        c_scrn_rect.height,
+                                        )
+                                       )
 
-        word_wrap(self._screen, c_txt_rect, self._combat_text, self.game_loop.display_info.text_font, (0, 0, 0))
+            c_txt_rect = Rect(c_scrn_rect.left + int(box_1.get_width() / 20),
+                              c_scrn_rect.top + int(box_1.get_height() / 4),
+                              box_1.get_width() - int(c_scrn_rect.width / 20),
+                              box_1.get_height() - int(c_scrn_rect.height / 5))
 
-        self._screen.blit(box_1, c_scrn_rect)
+            word_wrap(self._screen, c_txt_rect, self._combat_text, self.game_loop.display_info.text_font, (0, 0, 0))
+
+            self._screen.blit(box_1, c_scrn_rect)
