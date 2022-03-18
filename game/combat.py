@@ -60,30 +60,52 @@ class CombatScreen():
         poke = pg.transform.scale(pokemon_sprite, (pokemon_rect.width, pokemon_rect.height))
         self._screen.blit(poke, pokemon_rect.topleft)
 
+        hp_rect = self._draw_hp_detail(pokemon, detail_rect)
+        hp_bar_rect = self._draw_hp_bar_detail(pokemon, hp_rect)
+        hp_level_rect = self._draw_level_detail(pokemon.level, hp_bar_rect)
+        _ = self._draw_name_detail(pokemon.name, hp_level_rect)
+
+        p_line = pg.transform.scale(line_sprite, (detail_rect.width, detail_rect.height))
+        self._screen.blit(p_line, detail_rect.topleft)
+
+    def _draw_level_detail(self, pokemon_level: int, hp_bar_rect: Rect) -> Rect:
+        level = self.game_loop.display_info.details_font.render(f"L:{pokemon_level}", False, (0, 0, 0))
+        level_rect = level.get_rect(midbottom=hp_bar_rect.midtop)
+        self._screen.blit(level, level_rect)
+        return level_rect
+
+    def _draw_name_detail(self, pokemon_name: str, level_rect: Rect) -> Rect:
+        name = self.game_loop.display_info.details_font.render(f"{pokemon_name}", False, (0, 0, 0))
+        name_rect = name.get_rect(midbottom=level_rect.midtop)
+        self._screen.blit(name, name_rect)
+        return name_rect
+
+    def _draw_hp_bar_detail(self, pokemon: Pokemon, hp_rect: Rect) -> Rect:
+        hp_precent = (pokemon.current_hitpoints / pokemon.hitpoints)
+        hp_bar_rect = pg.draw.rect(self._screen, (0, 0, 0), (hp_rect.centerx,
+                                   hp_rect.top-hp_rect.height, 150, int(hp_rect.height * .50)), 1)
+        hp_precent_color = (7, 117, 1)
+        if hp_precent < 0.30:
+            hp_precent_color = (255, 76, 5)
+        elif hp_precent < 0.50:
+            hp_precent_color = (167, 176, 2)
+        pg.draw.rect(self._screen, hp_precent_color, (*hp_bar_rect.topleft,
+                                                      150*hp_precent, int(hp_rect.height * .50)), 0)
+
+        hp_string = self.game_loop.display_info.details_font.render("HP:", False, (0, 0, 0))
+        hp_string_rect = hp_string.get_rect(midright=hp_bar_rect.midleft)
+        self._screen.blit(hp_string, hp_string_rect)
+        return hp_bar_rect
+
+    def _draw_hp_detail(self, pokemon: Pokemon, detail_rect: Rect) -> Rect:
         hp = self.game_loop.display_info.details_font.render("{0} / {1}".format(
                                                              pokemon.current_hitpoints,
                                                              pokemon.hitpoints),
                                                              False, (0, 0, 0))
-        hp_rect = hp.get_rect(
-            centerx=detail_rect.centerx + (detail_rect.width * .10),
-            bottom=detail_rect.bottom - (detail_rect.height * .20))
-        hp_bar = self.game_loop.display_info.details_font.render("------------", False, (0, 0, 0))
-        hp_bar_rect = hp_bar.get_rect(midbottom=hp_rect.midtop)
-        hp_string = self.game_loop.display_info.details_font.render("HP: ", False, (0, 0, 0))
-        hp_string_rect = hp_string.get_rect(midright=hp_bar_rect.midleft)
-        level = self.game_loop.display_info.details_font.render(f"L:{pokemon.level}", False, (0, 0, 0))
-        level_rect = level.get_rect(midbottom=hp_bar_rect.midtop)
-        name = self.game_loop.display_info.details_font.render(f"{pokemon.name}", False, (0, 0, 0))
-        name_rect = name.get_rect(midbottom=level_rect.midtop)
-
+        hp_rect = hp.get_rect(centerx=detail_rect.centerx,
+                              bottom=detail_rect.bottom - (detail_rect.height * .15))
         self._screen.blit(hp, hp_rect)
-        self._screen.blit(hp_bar, hp_bar_rect)
-        self._screen.blit(hp_string, hp_string_rect)
-        self._screen.blit(name, name_rect)
-        self._screen.blit(level, level_rect)
-
-        p_line = pg.transform.scale(line_sprite, (detail_rect.width, detail_rect.height))
-        self._screen.blit(p_line, detail_rect.topleft)
+        return hp_rect
 
     def _draw_enemy_details(self):
         pokemon_rect = pg.rect.Rect((self._screen.get_width() - int(self._screen.get_width()/2.7),
