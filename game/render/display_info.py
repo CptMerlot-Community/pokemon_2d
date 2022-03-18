@@ -34,6 +34,9 @@ class DisplayInfo:
                                                                                            self.height * .02,
                                                                                            self.width,
                                                                                            self.height/10)
+        self.detail_text_start_left_mod = .30
+        self.detail_text_start_bottom_mod = .15
+        self.hp_bar_width = self.width * .20
 
     @property
     def width(self) -> int:

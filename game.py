@@ -12,7 +12,7 @@ freetype.init()
 
 def main():
     from game.render.display_info import configure_display, DISPLAY_INFO
-    dp = configure_display(DISPLAY_INFO.R_960_720)
+    dp = configure_display(DISPLAY_INFO.R_1280_960)
 
     from game.loop import GameLoop
 
