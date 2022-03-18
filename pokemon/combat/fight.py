@@ -61,6 +61,7 @@ class Combat():
         self._current_turn = self.defending_pokemon
         return dmg
 
+    # TODO: Make roll attack take in the AP and Defense to reduce logic from roll attack and roll special
     def _roll_attack(self) -> int:
         mod = operator.truediv(self.attack_pokemon.attack_power, self.defending_pokemon.defense)
         if mod > 1:

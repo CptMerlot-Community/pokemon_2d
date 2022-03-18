@@ -49,6 +49,7 @@ class CombatScreen():
         if self._combat is not None:
             self._combat.send_in_new_player_pokemon(self.game_loop.player.active_pokemon)
             self._fainted_pokemon = self._combat.pokemon_fainted()
+            self._pokemon_selector_screen = None
 
     def _draw_details(self,
                       pokemon_sprite: Surface,
@@ -85,29 +86,25 @@ class CombatScreen():
         self._screen.blit(p_line, detail_rect.topleft)
 
     def _draw_enemy_details(self):
-        pokemon_height = self._screen.get_height() / 2.5
-        detail_height = self._screen.get_height()/5.5
         pokemon_rect = pg.rect.Rect((self._screen.get_width() - int(self._screen.get_width()/2.7),
                                      self._screen.get_height()/20,
-                                     self._screen.get_width()/3,
-                                     pokemon_height))
+                                     *self.game_loop.display_info.pokemon_size))
         detail = pg.rect.Rect((0 + (self._screen.get_width()/50),
                                self._screen.get_height()/20,
-                               self._screen.get_width()/2.5,
-                               detail_height))
+                               *self.game_loop.display_info.detail_size))
         self._draw_details(e_pokemon, eLine, pokemon_rect, detail, self._combat._computer_pokemon)
 
     def _draw_player_details(self, combat_screen: Rect):
-        pokemon_height = self._screen.get_height() / 2.5
-        detail_height = self._screen.get_height()/5.5
-        pokemon_rect = pg.rect.Rect((combat_screen.left + int(combat_screen.width / 10),
-                                     ((self._screen.get_height() - combat_screen.height) - pokemon_height),
-                                     combat_screen.width / 3,
-                                     pokemon_height))
-        detail = pg.rect.Rect(((self._screen.get_width() - self._screen.get_width()/2.5) - self._screen.get_width()/50,
-                               (self._screen.get_height() - combat_screen.height) - detail_height,
-                               self._screen.get_width()/2.5,
-                               detail_height))
+        # TODO: move dynamic sizing into the display_info class
+
+        pokemon_rect = pg.rect.Rect(combat_screen.left + int(combat_screen.width / 10),
+                                    ((self._screen.get_height() - combat_screen.height) -
+                                     self.game_loop.display_info.pokemon_size[1]),
+                                    *self.game_loop.display_info.pokemon_size)
+        detail = pg.rect.Rect((self._screen.get_width() - self._screen.get_width()/2.5) - self._screen.get_width()/50,
+                              (self._screen.get_height() - combat_screen.height) -
+                              self.game_loop.display_info.detail_size[1],
+                              *self.game_loop.display_info.detail_size)
         if self._combat is None:
             raise BaseException("Combat has not started?")
         self._draw_details(p_pokemon, pLine, pokemon_rect, detail, self._combat._player_pokemon)

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Tuple
 from attr import attributes
 import pygame as pg
 from pygame.freetype import Font as FFont  # type: ignore
@@ -11,7 +12,8 @@ class DisplayInfo:
     def __init__(self,
                  vector: pg.Vector2,
                  details_size: int,
-                 talk_text_font_size: int):
+                 talk_text_font_size: int,
+                 welcome_font_size: int):
         self._pg_vector = vector
         self._details_font_size = details_size
         self._talk_text_font_size = talk_text_font_size
@@ -21,8 +23,25 @@ class DisplayInfo:
 
         self._text_font = FFont(file="assets/fonts/dogicapixel.ttf", size=self._talk_text_font_size)
 
-        self._welcome_font = pg.font.SysFont("Arial", 40)
+        self._welcome_font = pg.font.SysFont("Arial", welcome_font_size)
         self._welcome_font.bold = True
+        self.screen = pg.display.set_mode(self._pg_vector)
+
+        self.select_pokemon_arrow: Tuple[float, float] = self.width*.03, self.height*.048
+        self.pokemon_size: Tuple[float, float] = self.width/3, self.height / 2.5
+        self.detail_size: Tuple[float, float] = self.width/2.5, self.height/5.5
+        self.pokemon_screen_select_pokemon_rect_size: Tuple[float, float, float, float] = (self.width * .20,
+                                                                                           self.height * .02,
+                                                                                           self.width,
+                                                                                           self.height/10)
+
+    @property
+    def width(self) -> int:
+        return self.screen.get_width()
+
+    @property
+    def height(self) -> int:
+        return self.screen.get_height()
 
     @property
     def vector(self) -> pg.Vector2:
@@ -48,14 +67,16 @@ class DISPLAY_INFO(Enum):
     R_1280_960 = 4
 
 
-def get_display_info(display_info: DISPLAY_INFO) -> DisplayInfo:
+def configure_display(display_info: DISPLAY_INFO) -> DisplayInfo:
+    # TODO: Remove passing in sizes instead do base
+    # values and multiple by the correct scaling percentages per the resolution
     if display_info.value == DISPLAY_INFO.R_480_640.value:
-        return DisplayInfo(pg.Vector2(640, 480), 18, 28)
+        return DisplayInfo(pg.Vector2(640, 480), 18, 28, 40)
     elif display_info.value == DISPLAY_INFO.R_800_600.value:
-        return DisplayInfo(pg.Vector2(800, 600), 22, 35)
+        return DisplayInfo(pg.Vector2(800, 600), 22, 35, 50)
     elif display_info.value == DISPLAY_INFO.R_960_720.value:
-        return DisplayInfo(pg.Vector2(960, 720), 28, 50)
+        return DisplayInfo(pg.Vector2(960, 720), 28, 50, 60)
     elif display_info.value == DISPLAY_INFO.R_1280_960.value:
-        return DisplayInfo(pg.Vector2(1280, 960), 40, 60)
+        return DisplayInfo(pg.Vector2(1280, 960), 40, 60, 80)
     else:
-        return DisplayInfo(pg.Vector2(640, 480), 18, 28)
+        return DisplayInfo(pg.Vector2(640, 480), 18, 28, 40)

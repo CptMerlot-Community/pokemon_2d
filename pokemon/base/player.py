@@ -66,7 +66,7 @@ class Player():
 
     def remove_pokemon(self, location_id: int):
         if self._pokemons[location_id] != self._active_pokemon:
-            # TODO: this will discard a pokemon
+            # this will discard a pokemon
             self._pokemons.pop(location_id)
 
     def get_pokemon_status(self) -> PlayerPokemonStatus:

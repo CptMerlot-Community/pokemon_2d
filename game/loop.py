@@ -9,9 +9,9 @@ from pokemon.pokemons import GeneratePokemon
 
 
 class GameLoop():
-    def __init__(self, screen: Surface, clock: Clock, display_info: DisplayInfo):
+    def __init__(self, clock: Clock, display_info: DisplayInfo):
         self._running = True
-        self._screen = screen
+        self._screen = display_info.screen
         self._current_battle = False
         self._game_over = False
         self._clock = clock
