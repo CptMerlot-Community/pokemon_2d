@@ -24,6 +24,16 @@ class Combat():
             else:
                 self._player_pokemon = pokemon
 
+    def enemy_pokemon(self) -> Pokemon:
+        return self._computer_pokemon
+
+    def player_pokemon(self) -> Pokemon:
+        return self._player_pokemon
+
+    @property
+    def players_turn(self) -> bool:
+        return self._player_pokemon == self._current_turn
+
     @property
     def attack_pokemon(self):
         return self._current_turn
