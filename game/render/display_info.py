@@ -43,7 +43,7 @@ class DisplayInfo:
         self.color_off_white_rbg = 220, 220, 220
 
     @property
-    def combat_window_height(self) -> int:
+    def combat_window_height(self) -> float:
         return self._combat_window_height
 
     @property

@@ -7,10 +7,10 @@ from pokemon.base.pokemon import Pokemon
 from pokemon.pokemons import GeneratePokemon
 from pokemon.combat.fight import Combat
 from game.render.fonts import word_wrap  # type: ignore
-from game.battle.pokemon_select import PokemonSelectScreen
-from game.battle.player_action import PlayerAction
-from game.battle.battle_screen import BattleScreen, box1, box2, arrow_right
-from game.battle.new_combat_screen import CombatStart
+from game.battle.pokemon_select import PokemonSelectScreen  # type: ignore
+from game.battle.player_action import PlayerAction  # type: ignore
+from game.battle.details_screen import DetailsScreen, box2, arrow_right  # type: ignore
+from game.battle.new_combat_screen import CombatStart  # type: ignore
 
 
 if TYPE_CHECKING:
@@ -25,10 +25,11 @@ class CombatScreen():
 
     # Phase of combat tracker
     # New Comabt - Done
-    # # Render in Pokemon + Player (Scroll Across Screen)
-    # ## Wild Pokemon <-- blocks for enter key
-    # ## GO! XYZ!
+    # # Render in Pokemon + Player (Scroll Across Screen) <- Kind of did this
+    # ## Wild Pokemon <-- blocks for enter key <-- Kind of did this
+    # ## GO! XYZ! <--- need to do this
     # Than Combat <-- blocking action
+    # # Prompt Player for Action
     # # Pokemon Fainted <-- blocking action
     # # Awared XP or\and select new pokemon <--- blocking action
     # # Check for level up <-- blocking action
@@ -43,7 +44,7 @@ class CombatScreen():
         self._combat_text_screen_rect = self.create_combat_text_rect()
         self._combat_text = ""
         self._player_action_screen: PlayerAction = PlayerAction(self, box2, arrow_right)
-        self._battle_screen: BattleScreen = BattleScreen(self, self._combat)
+        self._battle_details_screen: DetailsScreen = DetailsScreen(self)
         self._combat_start: CombatStart = CombatStart(self)
 
     def create_combat_text_rect(self) -> Rect:
@@ -60,6 +61,7 @@ class CombatScreen():
 
     def combat_open_over(self):
         self._new_combat = False
+        self.set_combat_text(f"A wild {self._combat._computer_pokemon.name} has appeared.")
 
     def pokemon_select_screen(self):
         self._pokemon_selector_screen = PokemonSelectScreen(self._screen, self, arrow_right)
@@ -79,34 +81,40 @@ class CombatScreen():
 
     def render(self):
 
-        self._screen.fill(self.game_loop.display_info.color_off_white_rbg)
-
-        # combat screen
-
-        box_1 = pg.transform.scale(box1,
-                                   (self._combat_text_screen_rect.width,
-                                    self._combat_text_screen_rect.height,
-                                    )
-                                   )
-
-        c_txt_rect = Rect(self._combat_text_screen_rect.left + int(box_1.get_width() / 20),
-                          self._combat_text_screen_rect.top + int(box_1.get_height() / 4),
-                          box_1.get_width() - int(self._combat_text_screen_rect.width / 20),
-                          box_1.get_height() - int(self._combat_text_screen_rect.height / 5))
-
-        word_wrap(self._screen, c_txt_rect, self._combat_text, self.game_loop.display_info.text_font, (0, 0, 0))
-
-        self._screen.blit(box_1, self._combat_text_screen_rect)
-
         if self._new_combat:
-            # Render the new combat scroll effect
+            self._battle_details_screen.combat_text_render()
             self._combat_start.render()
         elif self._pokemon_selector_screen is not None:
             self._pokemon_selector_screen.render()
         elif self._player_turn:
             self._player_action_screen.render()
         else:
-            self._battle_screen.render()
+            self._battle_details_screen.render_full_battle_screen()
 
-        # TODO: have logic in setting players_turn
-        # self._combat_screen.set_player_turn()
+            # Get Event Loop
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.game_loop.StopRunning()
+                if self._fainted_pokemon is not None:
+                    if event.type == pg.KEYDOWN:
+                        if event.key in (pg.K_RETURN, pg.K_SPACE, pg.K_ESCAPE):
+                            if self._fainted_pokemon is self.game_loop.player.active_pokemon:
+                                if not self.game_loop.player.check_if_available_pokemons():
+                                    self.game_loop.GameOver(True)
+                                else:
+                                    self.pokemon_select_screen()
+                            else:
+                                self.game_loop.ExitCombat()
+                else:
+                    if event.type == pg.KEYDOWN:
+                        if event.key in (pg.K_RETURN, pg.K_SPACE):
+                            attk_pokemon = self._combat.attack_pokemon.name
+                            def_pokemon = self._combat.defending_pokemon.name
+                            self.set_combat_text(
+                                f"{attk_pokemon} hits {def_pokemon} for {self._combat.attack()}")
+                            self._fainted_pokemon = self._combat.pokemon_fainted()
+                            if self._fainted_pokemon is not None:
+                                self.set_combat_text(
+                                    f"{self._fainted_pokemon.name} has fainted...")
+                        if event.key == pg.K_ESCAPE:
+                            self.game_loop.StopRunning()

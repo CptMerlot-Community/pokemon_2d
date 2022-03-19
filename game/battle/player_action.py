@@ -25,11 +25,11 @@ class PlayerAction:
 
         action_scrn_rect = pg.draw.rect(self._screen,
                                         (self._combat_screen.game_loop.display_info.color_off_white_rbg),
-                                        (self._screen.get_width() * .65,
+                                        (int(self._screen.get_width() * .40),
                                             int(self._screen.get_height() -
                                                 (self._screen.get_height() *
                                                  self._combat_screen.game_loop.display_info.combat_window_height)),
-                                            self._screen.get_width() * .34,
+                                            int(self._screen.get_width() * .59),
                                             int(self._screen.get_height() *
                                                 self._combat_screen.game_loop.display_info.combat_window_height)
                                          )

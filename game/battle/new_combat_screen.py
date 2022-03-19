@@ -17,7 +17,6 @@ class CombatStart():
         self._combat_screen = combat_screen
         self._screen = self._combat_screen._screen
         self.game_loop = self._combat_screen.game_loop
-        # self._combat_screen.set_combat_text(f"A wild {combat._computer_pokemon.name} has appeared.")
 
     def render(self):
         for event in pg.event.get():

@@ -6,8 +6,6 @@ from pygame.rect import Rect
 from pokemon.base.pokemon import Pokemon
 from pokemon.combat.fight import Combat
 from game.render.fonts import word_wrap  # type: ignore
-from game.battle.pokemon_select import PokemonSelectScreen
-from game.battle.player_action import PlayerAction
 
 
 if TYPE_CHECKING:
@@ -26,14 +24,12 @@ p_pokemon = pg.image.load("./assets/Character_11_seafoam.png").convert_alpha()
 e_pokemon = pg.image.load("./assets/Character_9_baby_pink.png").convert_alpha()
 
 
-class BattleScreen():
-
-    def __init__(self, combat_screen: CombatScreen, combat: Combat):
+class DetailsScreen():
+    def __init__(self, combat_screen: CombatScreen):
         self._combat_screen = combat_screen
-        self._combat: Combat = combat
+        self._combat: Combat = self._combat_screen._combat
         self._screen = self._combat_screen._screen
         self.game_loop = self._combat_screen.game_loop
-        self._combat_screen.set_combat_text(f"A wild {combat._computer_pokemon.name} has appeared.")
 
     def _draw_details(self,
                       pokemon_sprite: Surface,
@@ -133,30 +129,30 @@ class BattleScreen():
         pokemon_rect, detail_rect = self._draw_player_details(combat_txt_screen)
         self._draw_enemy_details(pokemon_rect, detail_rect)
 
-    def render(self):
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                self.game_loop.StopRunning()
-            if self._combat_screen._fainted_pokemon is not None:
-                if event.type == pg.KEYDOWN:
-                    if event.key in (pg.K_RETURN, pg.K_SPACE, pg.K_ESCAPE):
-                        if self._combat_screen._fainted_pokemon is self.game_loop.player.active_pokemon:
-                            if not self.game_loop.player.check_if_available_pokemons():
-                                self.game_loop.GameOver(True)
-                            else:
-                                self._combat_screen.pokemon_select_screen()
-                        else:
-                            self.game_loop.ExitCombat()
-            else:
-                if event.type == pg.KEYDOWN:
-                    if event.key in (pg.K_RETURN, pg.K_SPACE):
-                        attk_pokemon = self._combat.attack_pokemon.name
-                        def_pokemon = self._combat.defending_pokemon.name
-                        self._combat_text = f"{attk_pokemon} hits {def_pokemon} for {self._combat.attack()}"
-                        self._combat_screen._fainted_pokemon = self._combat.pokemon_fainted()
-                        if self._combat_screen._fainted_pokemon is not None:
-                            self._combat_text = f"{self._combat_screen._fainted_pokemon.name} has fainted..."
-                    if event.key == pg.K_ESCAPE:
-                        self.game_loop.StopRunning()
-
+    def battle_details_render(self):
         self._draw_combat_details(self._combat_screen._combat_text_screen_rect)
+
+    def combat_text_render(self):
+        self._screen.fill(self.game_loop.display_info.color_off_white_rbg)
+
+        # combat screen
+
+        box_1 = pg.transform.scale(box1,
+                                   (self._combat_screen._combat_text_screen_rect.width,
+                                    self._combat_screen._combat_text_screen_rect.height,
+                                    )
+                                   )
+
+        c_txt_rect = Rect(self._combat_screen._combat_text_screen_rect.left + int(box_1.get_width() / 20),
+                          self._combat_screen._combat_text_screen_rect.top + int(box_1.get_height() / 4),
+                          box_1.get_width() - int(self._combat_screen._combat_text_screen_rect.width / 20),
+                          box_1.get_height() - int(self._combat_screen._combat_text_screen_rect.height / 5))
+
+        word_wrap(self._screen, c_txt_rect, self._combat_screen._combat_text,
+                  self.game_loop.display_info.text_font, (0, 0, 0))
+
+        self._screen.blit(box_1, self._combat_screen._combat_text_screen_rect)
+
+    def render_full_battle_screen(self):
+        self.combat_text_render()
+        self.battle_details_render()

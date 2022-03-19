@@ -11,6 +11,13 @@ if TYPE_CHECKING:
 
 class PokemonSelectScreen():
     def __init__(self, screen: Surface, combat_screen: CombatScreen, arrow_surface: Surface):
+        """_summary_
+
+        Args:
+            screen (Surface): _description_
+            combat_screen (CombatScreen): _description_
+            arrow_surface (Surface): _description_
+        """
         self._screen = screen
         self._combat_screen = combat_screen
         self._arrow_surface = arrow_surface
