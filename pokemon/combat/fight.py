@@ -65,10 +65,13 @@ class Combat():
             return self.attack_pokemon
         return None
 
+    def swap_turn(self):
+        self._current_turn = self.defending_pokemon
+
     def attack(self) -> int:
         dmg = self._roll_attack()
         self.defending_pokemon.take_damage(dmg)
-        self._current_turn = self.defending_pokemon
+        self.swap_turn()
         return dmg
 
     # TODO: Make roll attack take in the AP and Defense to reduce logic from roll attack and roll special

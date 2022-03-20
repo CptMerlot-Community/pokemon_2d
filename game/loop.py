@@ -20,8 +20,8 @@ class GameLoop():
         self._clock_tick_rate = 60
         self.display_info = display_info
         self.player: Player = Player(name="CptMerlot")
-        self.player.add_pokemon(GeneratePokemon(l_range=(4, 4), pokemons=[25]))
         self.player.add_pokemon(GeneratePokemon(l_range=(4, 4), pokemons=[1]))
+        self.player.add_pokemon(GeneratePokemon(l_range=(4, 4), pokemons=[19]))
         self.player.add_pokemon(GeneratePokemon(l_range=(4, 4), pokemons=[4]))
         self._c: Optional[CombatScreen] = None
         self._w = MainScreen(self._screen, self)
