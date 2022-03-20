@@ -19,7 +19,7 @@ class MainScreen():
                 self._game_loop.StopRunning()
             if event.type == pg.KEYDOWN:
                 if event.key in (pg.K_RETURN, pg.K_SPACE):
-                    self._game_loop.Combat(True)
+                    self._game_loop.EnterCombat()
                 if event.key == pg.K_ESCAPE:
                     self._game_loop.StopRunning()
 

@@ -37,6 +37,15 @@ class DisplayInfo:
         self.detail_text_start_left_mod = .30
         self.detail_text_start_bottom_mod = .15
         self.hp_bar_width = self.width * .20
+        self._combat_window_height = .30
+
+        self.color_white_rbg = 255, 255, 255
+        self.color_off_white_rbg = 220, 220, 220
+        self.color_black_rbg = 0, 0, 0
+
+    @property
+    def combat_window_height(self) -> float:
+        return self._combat_window_height
 
     @property
     def width(self) -> int:

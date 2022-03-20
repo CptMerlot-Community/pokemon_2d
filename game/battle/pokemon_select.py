@@ -1,20 +1,26 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List
 import pygame as pg
 from pygame.surface import Surface
 from pygame.rect import Rect
 from pokemon.base.player import PokemonStatus
 
 if TYPE_CHECKING:
-    from .combat import CombatScreen
-
-arrow_right = pg.image.load("./assets/arrow_pixel_art_right.png").convert_alpha()
+    from game.combat import CombatScreen
 
 
 class PokemonSelectScreen():
-    def __init__(self, screen: Surface, combat_screen: CombatScreen):
+    def __init__(self, screen: Surface, combat_screen: CombatScreen, arrow_surface: Surface):
+        """_summary_
+
+        Args:
+            screen (Surface): _description_
+            combat_screen (CombatScreen): _description_
+            arrow_surface (Surface): _description_
+        """
         self._screen = screen
         self._combat_screen = combat_screen
+        self._arrow_surface = arrow_surface
         self._pokemon_status = self._combat_screen.game_loop.player.get_pokemon_status()
         self._details_font = self._combat_screen.game_loop.display_info.details_font
         self._arrow_position = 0
@@ -54,7 +60,7 @@ class PokemonSelectScreen():
         arrow_rect = Rect(
             rect.left-self._combat_screen.game_loop.display_info.select_pokemon_arrow[0],
             rect.top, *self._combat_screen.game_loop.display_info.select_pokemon_arrow)
-        arrow = pg.transform.scale(arrow_right, (arrow_rect.width, arrow_rect.height))
+        arrow = pg.transform.scale(self._arrow_surface, (arrow_rect.width, arrow_rect.height))
         self._screen.blit(arrow, arrow_rect.topleft)
 
     def render(self):
@@ -77,5 +83,7 @@ class PokemonSelectScreen():
                     self._combat_screen.add_selected_player_pokemon(self._arrow_position)
                 if event.key == pg.K_ESCAPE:
                     self._combat_screen.game_loop.StopRunning()
+
+        self._screen.fill(self._combat_screen.game_loop.display_info.color_off_white_rbg)
 
         self.generate_pokemon_info()
